@@ -9,7 +9,7 @@ import './ui';
 
 function getTemplateHTML() {
   return /*html*/ `
-    <media-container class="media-default-skin media-default-skin--video">
+    <media-container class="media-default-skin media-default-skin--video media-default-skin--live">
       <!-- @deprecated slot="media" is no longer required, use the default slot instead -->
       <slot name="media"></slot>
       <slot></slot>
@@ -34,7 +34,7 @@ function getTemplateHTML() {
         </div>
       </media-error-dialog>
 
-      <media-controls class="media-surface media-controls">
+      <media-controls class="media-surface media-controls media-controls--primary">
         <media-tooltip-group>
           <div class="media-button-group">
             <media-play-button commandfor="play-tooltip" class="media-button media-button--subtle media-button--icon media-button--play">
@@ -124,6 +124,7 @@ function getTemplateHTML() {
               <media-tooltip-label></media-tooltip-label>
               <media-tooltip-shortcut class="media-tooltip__kbd"></media-tooltip-shortcut>
             </media-tooltip>
+
           </div>
         </media-tooltip-group>
       </media-controls>

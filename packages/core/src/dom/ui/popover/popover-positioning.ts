@@ -420,6 +420,7 @@ export function getManualPositionStyle(
  */
 export function resolveOffsets(el: Element, cssVars: PositioningCSSVars = PopoverCSSVars): ManualOffsets {
   const computed = getComputedStyle(el);
+
   return {
     sideOffset: resolveCSSLength(el, computed.getPropertyValue(cssVars.sideOffset)),
     alignOffset: resolveCSSLength(el, computed.getPropertyValue(cssVars.alignOffset)),

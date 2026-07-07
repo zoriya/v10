@@ -36,7 +36,49 @@ function getTemplateHTML() {
         </div>
       </media-error-dialog>
 
-      <media-controls class="media-surface media-controls">
+      <media-controls class="media-surface media-controls media-controls--secondary">
+        <media-tooltip-group>
+          <div class="media-button-group">
+            <media-cast-button commandfor="secondary-cast-tooltip" class="media-button media-button--subtle media-button--icon media-button--cast">
+              ${renderIcon('cast-enter', { class: 'media-icon media-icon--cast-enter' })}
+              ${renderIcon('cast-exit', { class: 'media-icon media-icon--cast-exit' })}
+            </media-cast-button>
+            <media-tooltip id="secondary-cast-tooltip" side="bottom" class="media-surface media-tooltip">
+              <media-tooltip-label></media-tooltip-label>
+              <media-tooltip-shortcut class="media-tooltip__kbd"></media-tooltip-shortcut>
+            </media-tooltip>
+
+            <media-airplay-button commandfor="secondary-airplay-tooltip" class="media-button media-button--subtle media-button--icon media-button--airplay">
+              ${renderIcon('airplay-enter', { class: 'media-icon media-icon--airplay-enter' })}
+              ${renderIcon('airplay-exit', { class: 'media-icon media-icon--airplay-exit' })}
+            </media-airplay-button>
+            <media-tooltip id="secondary-airplay-tooltip" side="bottom" class="media-surface media-tooltip">
+              <media-tooltip-label></media-tooltip-label>
+              <media-tooltip-shortcut class="media-tooltip__kbd"></media-tooltip-shortcut>
+            </media-tooltip>
+
+            <media-pip-button commandfor="secondary-pip-tooltip" class="media-button media-button--subtle media-button--icon media-button--pip">
+              ${renderIcon('pip-enter', { class: 'media-icon media-icon--pip-enter' })}
+              ${renderIcon('pip-exit', { class: 'media-icon media-icon--pip-exit' })}
+            </media-pip-button>
+            <media-tooltip id="secondary-pip-tooltip" side="bottom" class="media-surface media-tooltip">
+              <media-tooltip-label></media-tooltip-label>
+              <media-tooltip-shortcut class="media-tooltip__kbd"></media-tooltip-shortcut>
+            </media-tooltip>
+
+            <media-fullscreen-button commandfor="secondary-fullscreen-tooltip" class="media-button media-button--subtle media-button--icon media-button--fullscreen">
+              ${renderIcon('fullscreen-enter', { class: 'media-icon media-icon--fullscreen-enter' })}
+              ${renderIcon('fullscreen-exit', { class: 'media-icon media-icon--fullscreen-exit' })}
+            </media-fullscreen-button>
+            <media-tooltip id="secondary-fullscreen-tooltip" side="bottom" class="media-surface media-tooltip">
+              <media-tooltip-label></media-tooltip-label>
+              <media-tooltip-shortcut class="media-tooltip__kbd"></media-tooltip-shortcut>
+            </media-tooltip>
+          </div>
+        </media-tooltip-group>
+      </media-controls>
+
+      <media-controls class="media-surface media-controls media-controls--primary">
         <media-tooltip-group>
           <div class="media-button-group">
             <media-play-button commandfor="play-tooltip" class="media-button media-button--subtle media-button--icon media-button--play">
@@ -264,6 +306,7 @@ function getTemplateHTML() {
               <media-tooltip-label></media-tooltip-label>
               <media-tooltip-shortcut class="media-tooltip__kbd"></media-tooltip-shortcut>
             </media-tooltip>
+
           </div>
         </media-tooltip-group>
       </media-controls>

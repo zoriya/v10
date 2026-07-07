@@ -126,10 +126,10 @@ function VolumePopover(): ReactNode {
   if (volumeUnsupported) return muteButton;
 
   return (
-    <Popover.Root openOnHover delay={200} closeDelay={100} side="top">
+    <Popover.Root openOnHover delay={200} closeDelay={100} side="right">
       <Popover.Trigger render={muteButton} />
       <Popover.Popup className={cn(popup.volume)}>
-        <VolumeSlider.Root orientation="vertical" thumbAlignment="edge" render={<SliderRoot />}>
+        <VolumeSlider.Root orientation="horizontal" thumbAlignment="edge" render={<SliderRoot />}>
           <VolumeSlider.Track render={<SliderTrack />}>
             <VolumeSlider.Fill render={<SliderFill />} />
           </VolumeSlider.Track>
@@ -262,13 +262,13 @@ export function MinimalLiveVideoSkinTailwind(props: MinimalLiveVideoSkinProps): 
             </Tooltip.Root>
 
             <LiveButton className={cn(button.base, button.subtle, button.live)} />
+
+            <VolumePopover />
           </div>
 
           <div className="grow" aria-hidden="true" />
 
           <div className={buttonGroupEnd}>
-            <VolumePopover />
-
             <CaptionsTrigger />
 
             <Tooltip.Root side="top">

@@ -173,7 +173,7 @@ export function LiveVideoSkin(props: LiveVideoSkinProps): ReactNode {
 
   return (
     <Container
-      className={cn('media-default-skin media-default-skin--video', className)}
+      className={cn('media-default-skin media-default-skin--video media-default-skin--live', className)}
       style={containerStyle}
       {...rest}
     >
@@ -205,7 +205,7 @@ export function LiveVideoSkin(props: LiveVideoSkinProps): ReactNode {
         </ErrorDialog.Popup>
       </ErrorDialog.Root>
 
-      <Controls.Root className="media-surface media-controls">
+      <Controls.Root className="media-surface media-controls media-controls--primary">
         <Tooltip.Provider>
           <div className="media-button-group">
             <Tooltip.Root side="top">

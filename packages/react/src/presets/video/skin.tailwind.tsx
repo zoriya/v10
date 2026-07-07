@@ -16,6 +16,7 @@ import {
   popup,
   poster,
   root,
+  secondaryControls,
   seek,
   slider,
   thumbnail,
@@ -184,11 +185,7 @@ function SettingsMenu(): ReactNode {
 
   return (
     <Menu.Root side="top" align="center">
-      <Menu.Trigger
-        aria-label={t('Settings')}
-        className="media-button--settings"
-        render={<Button className={cn(button.icon, menu.settingsTrigger)} />}
-      >
+      <Menu.Trigger aria-label={t('Settings')} render={<Button className={cn(button.icon, menu.settingsTrigger)} />}>
         <GearIcon className={cn(icon, menu.settingsIcon)} />
       </Menu.Trigger>
       <Menu.Content className={menu.settings}>
@@ -198,7 +195,7 @@ function SettingsMenu(): ReactNode {
               <Menu.Root>
                 <Menu.Trigger
                   type="quality"
-                  className={cn(menu.item, 'media-menu__item--submenu')}
+                  className={menu.item}
                   render={(props) => (
                     <div {...props}>
                       <QualityIcon className={cn(icon, menu.icon)} />
@@ -252,7 +249,7 @@ function SettingsMenu(): ReactNode {
               <Menu.Root>
                 <Menu.Trigger
                   type="audio-track"
-                  className={cn(menu.item, 'media-menu__item--submenu')}
+                  className={menu.item}
                   render={(props) => (
                     <div {...props}>
                       <SpeechIcon className={icon} />
@@ -302,7 +299,7 @@ function SettingsMenu(): ReactNode {
               <Menu.Root>
                 <Menu.Trigger
                   type="playback-rate"
-                  className={cn(menu.item, 'media-menu__item--submenu')}
+                  className={menu.item}
                   render={(props) => (
                     <div {...props}>
                       <SpeedIcon className={cn(icon, menu.icon)} />
@@ -352,7 +349,7 @@ function SettingsMenu(): ReactNode {
               <Menu.Root>
                 <Menu.Trigger
                   type="captions"
-                  className={cn(menu.item, 'media-menu__item--submenu')}
+                  className={menu.item}
                   render={(props) => (
                     <div {...props}>
                       <CaptionsOffIcon className={cn(icon, menu.icon)} />
@@ -447,6 +444,72 @@ export function VideoSkinTailwind(props: VideoSkinProps): ReactNode {
         </ErrorDialog.Popup>
       </ErrorDialog.Root>
 
+      <Controls.Root data-controls="" className={secondaryControls}>
+        <Tooltip.Provider>
+          <div className={buttonGroupEnd}>
+            <Tooltip.Root side="bottom">
+              <Tooltip.Trigger
+                render={
+                  <CastButton className={iconState.cast.button} render={<Button />}>
+                    <CastEnterIcon className={cn(icon, iconState.cast.enter)} />
+                    <CastExitIcon className={cn(icon, iconState.cast.exit)} />
+                  </CastButton>
+                }
+              />
+              <Tooltip.Popup className={cn(popup.tooltip)}>
+                <Tooltip.Label />
+                <Tooltip.Shortcut className={popup.tooltipShortcut} />
+              </Tooltip.Popup>
+            </Tooltip.Root>
+
+            <Tooltip.Root side="bottom">
+              <Tooltip.Trigger
+                render={
+                  <AirPlayButton className={iconState.airplay.button} render={<Button />}>
+                    <AirPlayEnterIcon className={cn(icon, iconState.airplay.enter)} />
+                    <AirPlayExitIcon className={cn(icon, iconState.airplay.exit)} />
+                  </AirPlayButton>
+                }
+              />
+              <Tooltip.Popup className={cn(popup.tooltip)}>
+                <Tooltip.Label />
+                <Tooltip.Shortcut className={popup.tooltipShortcut} />
+              </Tooltip.Popup>
+            </Tooltip.Root>
+
+            <Tooltip.Root side="bottom">
+              <Tooltip.Trigger
+                render={
+                  <PiPButton className={iconState.pip.button} render={<Button />}>
+                    <PipEnterIcon className={cn(icon, iconState.pip.off)} />
+                    <PipExitIcon className={cn(icon, iconState.pip.on)} />
+                  </PiPButton>
+                }
+              />
+              <Tooltip.Popup className={cn(popup.tooltip)}>
+                <Tooltip.Label />
+                <Tooltip.Shortcut className={popup.tooltipShortcut} />
+              </Tooltip.Popup>
+            </Tooltip.Root>
+
+            <Tooltip.Root side="bottom">
+              <Tooltip.Trigger
+                render={
+                  <FullscreenButton className={iconState.fullscreen.button} render={<Button />}>
+                    <FullscreenEnterIcon className={cn(icon, iconState.fullscreen.enter)} />
+                    <FullscreenExitIcon className={cn(icon, iconState.fullscreen.exit)} />
+                  </FullscreenButton>
+                }
+              />
+              <Tooltip.Popup className={cn(popup.tooltip)}>
+                <Tooltip.Label />
+                <Tooltip.Shortcut className={popup.tooltipShortcut} />
+              </Tooltip.Popup>
+            </Tooltip.Root>
+          </div>
+        </Tooltip.Provider>
+      </Controls.Root>
+
       <Controls.Root
         data-controls="" // Used as a hook for Tailwind has-[] styles
         className={controls}
@@ -472,7 +535,7 @@ export function VideoSkinTailwind(props: VideoSkinProps): ReactNode {
             <Tooltip.Root side="top">
               <Tooltip.Trigger
                 render={
-                  <SeekButton seconds={-SEEK_TIME} render={<Button />}>
+                  <SeekButton seconds={-SEEK_TIME} render={<Button className="@max-[32rem]/media-root:hidden" />}>
                     <span className={iconContainer}>
                       <SeekIcon className={cn(icon, iconFlipped)} />
                       <span className={cn(seek.label, seek.labelBackward)}>{SEEK_TIME}</span>
@@ -489,7 +552,7 @@ export function VideoSkinTailwind(props: VideoSkinProps): ReactNode {
             <Tooltip.Root side="top">
               <Tooltip.Trigger
                 render={
-                  <SeekButton seconds={SEEK_TIME} render={<Button />}>
+                  <SeekButton seconds={SEEK_TIME} render={<Button className="@max-[32rem]/media-root:hidden" />}>
                     <span className={iconContainer}>
                       <SeekIcon className={icon} />
                       <span className={cn(seek.label, seek.labelForward)}>{SEEK_TIME}</span>
@@ -532,7 +595,10 @@ export function VideoSkinTailwind(props: VideoSkinProps): ReactNode {
             <Tooltip.Root side="top">
               <Tooltip.Trigger
                 render={
-                  <CastButton className={iconState.cast.button} render={<Button />}>
+                  <CastButton
+                    className={cn(iconState.cast.button, '@max-[32rem]/media-root:hidden')}
+                    render={<Button />}
+                  >
                     <CastEnterIcon className={cn(icon, iconState.cast.enter)} />
                     <CastExitIcon className={cn(icon, iconState.cast.exit)} />
                   </CastButton>
@@ -547,7 +613,10 @@ export function VideoSkinTailwind(props: VideoSkinProps): ReactNode {
             <Tooltip.Root side="top">
               <Tooltip.Trigger
                 render={
-                  <AirPlayButton className={iconState.airplay.button} render={<Button />}>
+                  <AirPlayButton
+                    className={cn(iconState.airplay.button, '@max-[32rem]/media-root:hidden')}
+                    render={<Button />}
+                  >
                     <AirPlayEnterIcon className={cn(icon, iconState.airplay.enter)} />
                     <AirPlayExitIcon className={cn(icon, iconState.airplay.exit)} />
                   </AirPlayButton>
@@ -562,7 +631,7 @@ export function VideoSkinTailwind(props: VideoSkinProps): ReactNode {
             <Tooltip.Root side="top">
               <Tooltip.Trigger
                 render={
-                  <PiPButton className={iconState.pip.button} render={<Button />}>
+                  <PiPButton className={cn(iconState.pip.button, '@max-[32rem]/media-root:hidden')} render={<Button />}>
                     <PipEnterIcon className={cn(icon, iconState.pip.off)} />
                     <PipExitIcon className={cn(icon, iconState.pip.on)} />
                   </PiPButton>
@@ -577,7 +646,10 @@ export function VideoSkinTailwind(props: VideoSkinProps): ReactNode {
             <Tooltip.Root side="top">
               <Tooltip.Trigger
                 render={
-                  <FullscreenButton className={iconState.fullscreen.button} render={<Button />}>
+                  <FullscreenButton
+                    className={cn(iconState.fullscreen.button, '@max-[32rem]/media-root:hidden')}
+                    render={<Button />}
+                  >
                     <FullscreenEnterIcon className={cn(icon, iconState.fullscreen.enter)} />
                     <FullscreenExitIcon className={cn(icon, iconState.fullscreen.exit)} />
                   </FullscreenButton>

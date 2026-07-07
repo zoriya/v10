@@ -52,7 +52,7 @@ export const inputFeedback = {
     ),
     // Volume island sizing + progress-fill gradient on the content child
     volume: cn(
-      'w-[min(80%,12rem)]',
+      'w-[min(80%,--spacing(48))]',
       '*:[--media-progress-fill:var(--media-volume-fill)]',
       '*:rounded-[inherit]',
       '*:[background-image:linear-gradient(to_right,currentColor_0%,currentColor_var(--media-progress-fill),transparent_var(--media-progress-fill),transparent_100%)]',
