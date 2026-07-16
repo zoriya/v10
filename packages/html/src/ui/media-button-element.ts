@@ -13,7 +13,7 @@ import {
   logMissingFeature,
   type UIEvent,
 } from '@videojs/core/dom';
-import { resolveTranslation } from '@videojs/core/i18n';
+import { isText, resolveText, resolveTranslation } from '@videojs/core/i18n';
 import type { PropertyDeclarationMap, PropertyValues } from '@videojs/element';
 import type { State } from '@videojs/store';
 
@@ -120,7 +120,7 @@ export abstract class MediaButtonElement<Core extends MediaButtonComponent> exte
     const media = this.mediaState.value;
     if (!media) return undefined;
     const state = this.core.getState() as InferComponentState<Core>;
-    return resolveTranslation(this.#i18n.value, this.core.getLabel(state), getLabelParams(this.core, state));
+    return resolveText(this.core.getLabel(state), this.#i18n.value, getLabelParams(this.core, state));
   }
 
   protected override willUpdate(changed: PropertyValues): void {
@@ -142,6 +142,8 @@ export abstract class MediaButtonElement<Core extends MediaButtonComponent> exte
     const attrs = (this.core.getAttrs?.(state) ?? {}) as Record<string, unknown>;
     if (typeof attrs['aria-label'] === 'string') {
       attrs['aria-label'] = resolveTranslation(this.#i18n.value, attrs['aria-label'], getLabelParams(this.core, state));
+    } else if (isText(attrs['aria-label'])) {
+      attrs['aria-label'] = resolveText(attrs['aria-label'], this.#i18n.value, getLabelParams(this.core, state));
     }
     applyElementProps(this, {
       ...attrs,

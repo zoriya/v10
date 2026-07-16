@@ -16,7 +16,7 @@ export interface MenuBackProps extends UIComponentProps<'button', MenuState> {
 
 /** Button that navigates back to the parent menu view. Place at the top of a submenu Content. */
 export const MenuBack = forwardRef<HTMLButtonElement, MenuBackProps>(function MenuBack(
-  { render, className, style, label = 'Back', onClick, ...elementProps },
+  { render, className, style, label = 'menu.back', onClick, ...elementProps },
   forwardedRef
 ) {
   const t = useTranslator();
@@ -40,7 +40,7 @@ export const MenuBack = forwardRef<HTMLButtonElement, MenuBackProps>(function Me
       props: [
         {
           type: 'button' as const,
-          'aria-label': resolveTranslation(t, label),
+          'aria-label': resolveTranslation(t, label, label === 'menu.back' ? { default: 'Back' } : undefined),
           onClick: handleClick,
         },
         elementProps,

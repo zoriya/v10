@@ -15,7 +15,7 @@ export class MenuBackElement extends MediaElement {
     label: { type: String },
   } satisfies PropertyDeclarationMap<'label'>;
 
-  label = 'Back';
+  label = 'menu.back';
 
   readonly #i18n = new I18nController(this, i18nContext);
   readonly #ctx = new ContextConsumer(this, { context: menuContext, subscribe: true });
@@ -59,7 +59,11 @@ export class MenuBackElement extends MediaElement {
 
     applyElementProps(this, {
       role: 'button',
-      'aria-label': resolveTranslation(this.#i18n.value, this.label),
+      'aria-label': resolveTranslation(
+        this.#i18n.value,
+        this.label,
+        this.label === 'menu.back' ? { default: 'Back' } : undefined
+      ),
     });
   }
 }

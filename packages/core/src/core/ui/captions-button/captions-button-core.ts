@@ -2,7 +2,8 @@ import { createState } from '@videojs/store';
 import { isCaptionOrSubtitleTrack } from '@videojs/utils/dom';
 import { defaults } from '@videojs/utils/object';
 import type { NonNullableObject } from '@videojs/utils/types';
-
+import { type Text, textValue } from '../../i18n';
+import { disable, enable } from '../../i18n/text/captions';
 import type { MediaTextTrackState } from '../../media/state';
 import type { ButtonState } from '../types';
 import { resolveLabel } from '../utils/resolve-label';
@@ -44,11 +45,11 @@ export class CaptionsButtonCore {
     this.#props = defaults(props, CaptionsButtonCore.defaultProps);
   }
 
-  getLabel(state: CaptionsButtonState): string {
+  getLabel(state: CaptionsButtonState): Text | string {
     const label = resolveLabel(this.#props.label, state);
     if (label) return label;
 
-    return state.subtitlesShowing ? 'Disable captions' : 'Enable captions';
+    return state.subtitlesShowing ? disable : enable;
   }
 
   getAttrs(state: CaptionsButtonState) {
@@ -69,7 +70,7 @@ export class CaptionsButtonCore {
       : 'unavailable';
 
     this.state.patch({ subtitlesShowing: media.subtitlesShowing, availability });
-    this.state.patch({ label: this.getLabel(this.state.current) });
+    this.state.patch({ label: textValue(this.getLabel(this.state.current)) });
 
     return this.state.current;
   }

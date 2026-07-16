@@ -136,7 +136,12 @@ function PlaybackRateRadioGroup(): ReactNode {
   const { options, setValue, value } = state;
 
   return (
-    <Menu.RadioGroup className={menu.group} value={value} onValueChange={setValue} aria-label={t('Playback rate')}>
+    <Menu.RadioGroup
+      className={menu.group}
+      value={value}
+      onValueChange={setValue}
+      aria-label={t('menu.playbackRate', { default: 'Playback rate' })}
+    >
       {options.map((option) => (
         <Menu.RadioItem key={option.value} className={menu.item} value={option.value} disabled={option.disabled}>
           <span>{option.label}</span>

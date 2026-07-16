@@ -1,7 +1,8 @@
 import { createState } from '@videojs/store';
 import { defaults } from '@videojs/utils/object';
 import type { NonNullableObject } from '@videojs/utils/types';
-
+import { type Text, textValue } from '../../i18n';
+import { enter, exit } from '../../i18n/text/pip';
 import type { MediaPictureInPictureState } from '../../media/state';
 import type { ButtonState } from '../types';
 import { resolveLabel } from '../utils/resolve-label';
@@ -41,11 +42,11 @@ export class PiPButtonCore {
     this.#props = defaults(props, PiPButtonCore.defaultProps);
   }
 
-  getLabel(state: PiPButtonState): string {
+  getLabel(state: PiPButtonState): Text | string {
     const label = resolveLabel(this.#props.label, state);
     if (label) return label;
 
-    return state.pip ? 'Exit picture-in-picture' : 'Enter picture-in-picture';
+    return state.pip ? exit : enter;
   }
 
   getAttrs(state: PiPButtonState) {
@@ -62,7 +63,7 @@ export class PiPButtonCore {
   getState(): PiPButtonState {
     const media = this.#media!;
     this.state.patch({ pip: media.pip, availability: media.pipAvailability });
-    this.state.patch({ label: this.getLabel(this.state.current) });
+    this.state.patch({ label: textValue(this.getLabel(this.state.current)) });
 
     return this.state.current;
   }

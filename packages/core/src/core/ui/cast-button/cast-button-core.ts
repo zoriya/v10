@@ -1,7 +1,8 @@
 import { createState } from '@videojs/store';
 import { defaults } from '@videojs/utils/object';
 import type { NonNullableObject } from '@videojs/utils/types';
-
+import { type Text, textValue } from '../../i18n';
+import { connecting, start, stop } from '../../i18n/text/cast';
 import type { MediaRemotePlaybackState, RemotePlaybackConnectionState } from '../../media/state';
 import type { MediaFeatureAvailability } from '../../media/types';
 import type { ButtonState } from '../types';
@@ -42,13 +43,13 @@ export class CastButtonCore {
     this.#props = defaults(props, CastButtonCore.defaultProps);
   }
 
-  getLabel(state: CastButtonState): string {
+  getLabel(state: CastButtonState): Text | string {
     const label = resolveLabel(this.#props.label, state);
     if (label) return label;
 
-    if (state.castState === 'connected') return 'Stop casting';
-    if (state.castState === 'connecting') return 'Connecting';
-    return 'Start casting';
+    if (state.castState === 'connected') return stop;
+    if (state.castState === 'connecting') return connecting;
+    return start;
   }
 
   getAttrs(state: CastButtonState) {
@@ -70,7 +71,7 @@ export class CastButtonCore {
       castState: media.remotePlaybackState,
       availability: castSupported ? media.remotePlaybackAvailability : 'unsupported',
     });
-    this.state.patch({ label: this.getLabel(this.state.current) });
+    this.state.patch({ label: textValue(this.getLabel(this.state.current)) });
 
     return this.state.current;
   }

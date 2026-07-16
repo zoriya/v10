@@ -185,7 +185,7 @@ function SettingsMenu(): ReactNode {
   return (
     <Menu.Root side="top" align="center">
       <Menu.Trigger
-        aria-label={t('Settings')}
+        aria-label={t('menu.settings', { default: 'Settings' })}
         className="media-button--settings"
         render={<Button className={cn(button.icon, menu.settingsTrigger)} />}
       >
@@ -202,7 +202,7 @@ function SettingsMenu(): ReactNode {
                   render={(props) => (
                     <div {...props}>
                       <QualityIcon className={cn(icon, menu.icon)} />
-                      <span>{t('Quality')}</span>
+                      <span>{t('menu.quality', { default: 'Quality' })}</span>
                       <span className={menu.hint}>
                         <Menu.ItemValue className={menu.hintLabel} />
                         <MenuChevron />
@@ -213,14 +213,14 @@ function SettingsMenu(): ReactNode {
                 <Menu.Content className={menu.submenuPanel}>
                   <Menu.Back className={menu.back}>
                     <MenuChevron flipped />
-                    {t('Quality')}
+                    {t('menu.quality', { default: 'Quality' })}
                   </Menu.Back>
                   <Menu.Separator className={menu.separator} />
                   <Menu.RadioGroup
                     className={menu.group}
                     value={quality.value}
                     onValueChange={quality.setValue}
-                    aria-label={t('Quality')}
+                    aria-label={t('menu.quality', { default: 'Quality' })}
                   >
                     {quality.options.map((option) => (
                       <Menu.RadioItem
@@ -256,7 +256,7 @@ function SettingsMenu(): ReactNode {
                   render={(props) => (
                     <div {...props}>
                       <SpeechIcon className={icon} />
-                      <span>{t('Audio')}</span>
+                      <span>{t('menu.audio', { default: 'Audio' })}</span>
                       <span className={menu.hint}>
                         <Menu.ItemValue className={menu.hintLabel} />
                         <MenuChevron />
@@ -267,14 +267,14 @@ function SettingsMenu(): ReactNode {
                 <Menu.Content className={menu.submenuPanel}>
                   <Menu.Back className={menu.back}>
                     <MenuChevron flipped />
-                    {t('Audio')}
+                    {t('menu.audio', { default: 'Audio' })}
                   </Menu.Back>
                   <Menu.Separator className={menu.separator} />
                   <Menu.RadioGroup
                     className={menu.group}
                     value={audioTrack.value}
                     onValueChange={audioTrack.setValue}
-                    aria-label={t('Audio')}
+                    aria-label={t('menu.audio', { default: 'Audio' })}
                   >
                     {audioTrack.options.map((option) => (
                       <Menu.RadioItem
@@ -306,7 +306,7 @@ function SettingsMenu(): ReactNode {
                   render={(props) => (
                     <div {...props}>
                       <SpeedIcon className={cn(icon, menu.icon)} />
-                      <span>{t('Speed')}</span>
+                      <span>{t('menu.speed', { default: 'Speed' })}</span>
                       <span className={menu.hint}>
                         <Menu.ItemValue className={menu.hintLabel} />
                         <MenuChevron />
@@ -317,14 +317,14 @@ function SettingsMenu(): ReactNode {
                 <Menu.Content className={menu.submenuPanel}>
                   <Menu.Back className={menu.back}>
                     <MenuChevron flipped />
-                    {t('Speed')}
+                    {t('menu.speed', { default: 'Speed' })}
                   </Menu.Back>
                   <Menu.Separator className={menu.separator} />
                   <Menu.RadioGroup
                     className={menu.group}
                     value={playbackRate.value}
                     onValueChange={playbackRate.setValue}
-                    aria-label={t('Playback rate')}
+                    aria-label={t('menu.playbackRate', { default: 'Playback rate' })}
                   >
                     {playbackRate.options.map((option) => (
                       <Menu.RadioItem
@@ -356,7 +356,7 @@ function SettingsMenu(): ReactNode {
                   render={(props) => (
                     <div {...props}>
                       <CaptionsOffIcon className={cn(icon, menu.icon)} />
-                      <span>{t('Captions')}</span>
+                      <span>{t('menu.captions', { default: 'Captions' })}</span>
                       <span className={menu.hint}>
                         <Menu.ItemValue className={menu.hintLabel} />
                         <MenuChevron />
@@ -367,14 +367,14 @@ function SettingsMenu(): ReactNode {
                 <Menu.Content className={menu.submenuPanel}>
                   <Menu.Back className={menu.back}>
                     <MenuChevron flipped />
-                    {t('Captions')}
+                    {t('menu.captions', { default: 'Captions' })}
                   </Menu.Back>
                   <Menu.Separator className={menu.separator} />
                   <Menu.RadioGroup
                     className={menu.group}
                     value={captions.value}
                     onValueChange={captions.setValue}
-                    aria-label={t('Captions')}
+                    aria-label={t('menu.captions', { default: 'Captions' })}
                   >
                     {captions.options.map((option) => (
                       <Menu.RadioItem

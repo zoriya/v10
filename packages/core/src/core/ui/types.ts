@@ -1,4 +1,5 @@
 import type { State } from '@videojs/store';
+import type { Text } from '../i18n';
 
 export type StateAttrMap<State> = {
   [Key in keyof State]?: string;
@@ -24,7 +25,7 @@ export interface ButtonState {
 export interface MediaButtonComponent<Props = object, ComponentState extends ButtonState = ButtonState>
   extends MediaUIComponent<Props, ComponentState> {
   readonly state: State<ComponentState>;
-  getLabel(state: ComponentState): string;
+  getLabel(state: ComponentState): Text | string;
 }
 
 /** Extracts the media state parameter type from a core's `setMedia` method. */

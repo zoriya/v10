@@ -1,7 +1,8 @@
 import { createState } from '@videojs/store';
 import { defaults } from '@videojs/utils/object';
 import type { NonNullableObject } from '@videojs/utils/types';
-
+import { type Text, textValue } from '../../i18n';
+import { enter, exit } from '../../i18n/text/fullscreen';
 import type { MediaFullscreenState } from '../../media/state';
 import type { ButtonState } from '../types';
 import { resolveLabel } from '../utils/resolve-label';
@@ -41,11 +42,11 @@ export class FullscreenButtonCore {
     this.#props = defaults(props, FullscreenButtonCore.defaultProps);
   }
 
-  getLabel(state: FullscreenButtonState): string {
+  getLabel(state: FullscreenButtonState): Text | string {
     const label = resolveLabel(this.#props.label, state);
     if (label) return label;
 
-    return state.fullscreen ? 'Exit fullscreen' : 'Enter fullscreen';
+    return state.fullscreen ? exit : enter;
   }
 
   getAttrs(state: FullscreenButtonState) {
@@ -62,7 +63,7 @@ export class FullscreenButtonCore {
   getState(): FullscreenButtonState {
     const media = this.#media!;
     this.state.patch({ fullscreen: media.fullscreen, availability: media.fullscreenAvailability });
-    this.state.patch({ label: this.getLabel(this.state.current) });
+    this.state.patch({ label: textValue(this.getLabel(this.state.current)) });
 
     return this.state.current;
   }

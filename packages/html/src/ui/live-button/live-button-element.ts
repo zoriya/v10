@@ -8,7 +8,7 @@ import {
   selectLive,
   selectTime,
 } from '@videojs/core/dom';
-import { resolveTranslation } from '@videojs/core/i18n';
+import { resolveText } from '@videojs/core/i18n';
 import type { PropertyDeclarationMap, PropertyValues } from '@videojs/element';
 import type { State } from '@videojs/store';
 
@@ -91,7 +91,7 @@ export class LiveButtonElement extends MediaElement {
     const media = this.#getMedia();
     if (!media) return undefined;
     const state = this.core.getState();
-    return resolveTranslation(this.#i18n.value, this.core.getLabel(state));
+    return resolveText(this.core.getLabel(state), this.#i18n.value);
   }
 
   protected override willUpdate(changed: PropertyValues): void {
@@ -110,7 +110,7 @@ export class LiveButtonElement extends MediaElement {
     const attrs = this.core.getAttrs(state);
     applyElementProps(this, {
       ...attrs,
-      'aria-label': resolveTranslation(this.#i18n.value, attrs['aria-label']),
+      'aria-label': resolveText(attrs['aria-label'], this.#i18n.value),
     });
     applyStateDataAttrs(this, state, LiveButtonDataAttrs);
   }

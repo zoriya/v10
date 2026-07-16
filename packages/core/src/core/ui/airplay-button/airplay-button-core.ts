@@ -2,7 +2,9 @@ import { createState } from '@videojs/store';
 import { supportsWebKitAirPlay } from '@videojs/utils/dom';
 import { defaults } from '@videojs/utils/object';
 import type { NonNullableObject } from '@videojs/utils/types';
-
+import { type Text, textValue } from '../../i18n';
+import { start, stop } from '../../i18n/text/airplay';
+import { connecting } from '../../i18n/text/cast';
 import type { MediaRemotePlaybackState, RemotePlaybackConnectionState } from '../../media/state';
 import type { MediaFeatureAvailability } from '../../media/types';
 import type { ButtonState } from '../types';
@@ -44,13 +46,13 @@ export class AirPlayButtonCore {
     this.#props = defaults(props, AirPlayButtonCore.defaultProps);
   }
 
-  getLabel(state: AirPlayButtonState): string {
+  getLabel(state: AirPlayButtonState): Text | string {
     const label = resolveLabel(this.#props.label, state);
     if (label) return label;
 
-    if (state.state === 'connected') return 'Stop AirPlay';
-    if (state.state === 'connecting') return 'Connecting';
-    return 'Start AirPlay';
+    if (state.state === 'connected') return stop;
+    if (state.state === 'connecting') return connecting;
+    return start;
   }
 
   getAttrs(state: AirPlayButtonState) {
@@ -75,7 +77,7 @@ export class AirPlayButtonCore {
       state: media.remotePlaybackState,
       availability: isAirPlaySupported ? media.remotePlaybackAvailability : 'unsupported',
     });
-    this.state.patch({ label: this.getLabel(this.state.current) });
+    this.state.patch({ label: textValue(this.getLabel(this.state.current)) });
 
     return this.state.current;
   }

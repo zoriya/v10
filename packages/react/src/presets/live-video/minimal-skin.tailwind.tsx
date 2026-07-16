@@ -182,7 +182,7 @@ function CaptionsTrigger(): ReactNode {
           className={menu.group}
           value={captions.value}
           onValueChange={captions.setValue}
-          aria-label={t('Captions')}
+          aria-label={t('menu.captions', { default: 'Captions' })}
         >
           {captions.options.map((option) => (
             <Menu.RadioItem key={option.value} className={menu.item} value={option.value} disabled={option.disabled}>

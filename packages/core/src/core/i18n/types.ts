@@ -4,106 +4,123 @@ import type { LOCALES } from './locales';
 /** BCP 47 language tag; built-ins are narrowed for autocomplete. */
 export type Locale = (typeof LOCALES)[number] | (string & {});
 
-/** Per-phrase argument contract: `never` means the translator only accepts the phrase. */
-export type TranslationParams = {
-  Play: never;
-  Pause: never;
-  Replay: never;
-  Mute: never;
-  Unmute: never;
-  'Seek forward {seconds} seconds': { seconds: number | string };
-  'Seek backward {seconds} seconds': { seconds: number | string };
-  'Enter fullscreen': never;
-  'Exit fullscreen': never;
-  'Enable captions': never;
-  'Disable captions': never;
-  'Enter picture-in-picture': never;
-  'Exit picture-in-picture': never;
-  'Playing live': never;
-  'Seek to live edge': never;
-  Live: never;
-  'Start casting': never;
-  'Stop casting': never;
-  Connecting: never;
-  Seek: never;
-  Volume: never;
-  'Current time': never;
-  Duration: never;
-  Remaining: never;
-  '{duration} remaining': { duration: string };
-  '{duration}. Show elapsed time.': { duration: string };
-  '{duration}. Show duration.': { duration: string };
-  '{duration}. Show remaining time.': { duration: string };
-  'Playback rate {rate}': { rate: number | string };
-  '{current} of {duration}': { current: string; duration: string };
-  '{percent}, muted': { percent: number | string };
-  Muted: never;
-  'Volume {value}': { value: string };
-  'Captions on': never;
-  'Captions off': never;
-  Paused: never;
-  Playing: never;
-  Fullscreen: never;
-  'Picture in picture': never;
-  'Exit picture in picture': never;
-  'You stopped media playback before it finished.': never;
-  'This media could not be loaded due to a network or server issue.': never;
-  'This media could not be played. It may be corrupted, or your browser may not support its format.': never;
-  'This media could not be loaded. It may be unavailable, or your browser may not support its format.': never;
-  'This media could not be played because it could not be decrypted.': never;
-  '': never;
-  'Something went wrong.': never;
-  OK: never;
-  'An unexpected error occurred.': never;
-  Settings: never;
-  Quality: never;
-  Audio: never;
-  Default: never;
-  Speed: never;
-  Captions: never;
-  'Playback rate': never;
-  Back: never;
-  Off: never;
-  Auto: never;
-  'Auto ({label})': { label: string };
-  Subtitles: never;
+/** Nested shape used by authored locale files. */
+export interface Translations {
+  readonly [key: string]: string | Translations | undefined;
+}
+
+/** Per-key argument contract: `never` means the translator only accepts the key. */
+type SemanticTranslationParams = {
+  'buttons.play': never;
+  'buttons.pause': never;
+  'buttons.replay': never;
+  'buttons.mute': never;
+  'buttons.unmute': never;
+  'seek.forward': { seconds: number | string };
+  'seek.backward': { seconds: number | string };
+  'fullscreen.enter': never;
+  'fullscreen.exit': never;
+  'captions.enable': never;
+  'captions.disable': never;
+  'pip.enter': never;
+  'pip.exit': never;
+  'live.playing': never;
+  'live.seekToEdge': never;
+  'live.badge': never;
+  'cast.start': never;
+  'cast.stop': never;
+  'cast.connecting': never;
+  'airplay.start': never;
+  'airplay.stop': never;
+  'slider.seek': never;
+  'time.current': never;
+  'time.duration': never;
+  'time.remaining': never;
+  'time.remainingSuffix': { duration: string };
+  'time.showElapsed': { duration: string };
+  'time.showDuration': { duration: string };
+  'time.showRemaining': { duration: string };
+  'playback.rate': { rate: number | string };
+  'time.position': { current: string; duration: string };
+  'volume.mutedValue': { percent: number | string };
+  'volume.muted': never;
+  'volume.label': never;
+  'volume.value': { value: string };
+  'status.captionsOn': never;
+  'status.captionsOff': never;
+  'status.paused': never;
+  'status.playing': never;
+  'status.fullscreen': never;
+  'status.pip': never;
+  'status.exitPip': never;
+  'errors.aborted': never;
+  'errors.network': never;
+  'errors.decode': never;
+  'errors.source': never;
+  'errors.encrypted': never;
+  'common.empty': never;
+  'errors.title': never;
+  'common.ok': never;
+  'errors.unexpected': never;
+  'menu.settings': never;
+  'menu.quality': never;
+  'menu.audio': never;
+  'menu.default': never;
+  'menu.speed': never;
+  'menu.captions': never;
+  'menu.playbackRate': never;
+  'menu.back': never;
+  'menu.off': never;
+  'menu.auto': never;
+  'menu.autoWithLabel': { label: string };
+  'menu.subtitles': never;
 };
+
+export type TranslationParams = SemanticTranslationParams;
 
 export type TranslationKey = keyof TranslationParams;
 
-type ParametricKey = {
-  [K in keyof TranslationParams]: TranslationParams[K] extends never ? never : K;
-}[keyof TranslationParams];
+export interface TranslationOptions {
+  default?: string;
+}
 
-/** Placeholder shape for each phrase that accepts `t(phrase, params)`. */
+type ParametricKey = {
+  [Key in keyof SemanticTranslationParams]: SemanticTranslationParams[Key] extends never ? never : Key;
+}[keyof SemanticTranslationParams];
+
+/** Placeholder shape for each key that accepts `t(key, params)`. */
 type ParametricTranslations = EnsureRecord<
   ParametricKey,
   string,
   {
-    'Seek forward {seconds} seconds': Contains<'{seconds}'>;
-    'Seek backward {seconds} seconds': Contains<'{seconds}'>;
-    'Playback rate {rate}': Contains<'{rate}'>;
-    '{current} of {duration}': Contains<'{current}'> & Contains<'{duration}'>;
-    '{duration} remaining': Contains<'{duration}'>;
-    '{duration}. Show elapsed time.': Contains<'{duration}'>;
-    '{duration}. Show duration.': Contains<'{duration}'>;
-    '{duration}. Show remaining time.': Contains<'{duration}'>;
-    '{percent}, muted': Contains<'{percent}'>;
-    'Volume {value}': Contains<'{value}'>;
-    'Auto ({label})': Contains<'{label}'>;
+    'seek.forward': Contains<'{seconds}'>;
+    'seek.backward': Contains<'{seconds}'>;
+    'time.remainingSuffix': Contains<'{duration}'>;
+    'time.showElapsed': Contains<'{duration}'>;
+    'time.showDuration': Contains<'{duration}'>;
+    'time.showRemaining': Contains<'{duration}'>;
+    'playback.rate': Contains<'{rate}'>;
+    'time.position': Contains<'{current}'> & Contains<'{duration}'>;
+    'volume.mutedValue': Contains<'{percent}'>;
+    'volume.value': Contains<'{value}'>;
+    'menu.autoWithLabel': Contains<'{label}'>;
   }
 >;
 
-/** Player copy keyed by the default English UI string; all entries are optional overlays. */
-export type Translations = {
-  [K in keyof TranslationParams]?: TranslationParams[K] extends never
+/** Player copy keyed by semantic key; all entries are optional overlays. */
+export type FlatTranslations = {
+  [Key in keyof TranslationParams]?: TranslationParams[Key] extends never
     ? string
-    : K extends keyof ParametricTranslations
-      ? ParametricTranslations[K]
-      : never;
-};
+    : Key extends keyof ParametricTranslations
+      ? ParametricTranslations[Key]
+      : string;
+} & Record<string, string | undefined>;
 
-export type Translator = <K extends keyof TranslationParams>(
-  phrase: K,
-  ...args: TranslationParams[K] extends never ? [] : [params: TranslationParams[K]]
+export type Translator = <Key extends string>(
+  key: Key,
+  ...args: Key extends keyof TranslationParams
+    ? TranslationParams[Key] extends never
+      ? [params?: TranslationOptions]
+      : [params: TranslationParams[Key] & TranslationOptions]
+    : [params?: Record<string, string | number> & TranslationOptions]
 ) => string;

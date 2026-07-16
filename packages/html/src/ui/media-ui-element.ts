@@ -1,6 +1,6 @@
 import type { InferComponentState, InferMediaState, MediaUIComponent, StateAttrMap } from '@videojs/core';
 import { applyElementProps, applyStateDataAttrs, logMissingFeature } from '@videojs/core/dom';
-import { resolveTranslation } from '@videojs/core/i18n';
+import { isText, resolveText, resolveTranslation } from '@videojs/core/i18n';
 import type { PropertyValues } from '@videojs/element';
 import { isFunction } from '@videojs/utils/predicate';
 
@@ -38,6 +38,8 @@ export abstract class MediaUIElement<Core extends MediaUIComponent> extends Medi
       const attrs = this.core.getAttrs(state) as Record<string, unknown>;
       if (typeof attrs['aria-label'] === 'string') {
         attrs['aria-label'] = resolveTranslation(this.#i18n.value, attrs['aria-label']);
+      } else if (isText(attrs['aria-label'])) {
+        attrs['aria-label'] = resolveText(attrs['aria-label'], this.#i18n.value);
       }
       applyElementProps(this, attrs);
     }

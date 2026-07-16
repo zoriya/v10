@@ -1,6 +1,7 @@
 import '../define/i18n';
 
 export type {
+  FlatTranslations,
   Locale,
   TranslationParams,
   Translations,
@@ -12,6 +13,7 @@ export {
   findLocaleKeys,
   getI18nTranslations,
   hasRegisteredLocale,
+  isText,
   onI18nRegistryChange,
   registerI18n,
 } from '@videojs/core/i18n';

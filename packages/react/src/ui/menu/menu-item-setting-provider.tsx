@@ -39,8 +39,9 @@ function CaptionsMenuItemSettingProvider({ children }: { children: ReactNode }):
   const { state, options, value } = captions;
   const label =
     value === CAPTIONS_OFF_VALUE
-      ? resolveTranslation(t, 'Off')
-      : (options.find((option) => option.value === value)?.label ?? resolveTranslation(t, 'Off'));
+      ? resolveTranslation(t, 'menu.off', { default: 'Off' })
+      : (options.find((option) => option.value === value)?.label ??
+        resolveTranslation(t, 'menu.off', { default: 'Off' }));
 
   return (
     <MenuItemSettingContextProvider value={{ type: 'captions', label, availability: state.availability }}>
@@ -55,7 +56,8 @@ function QualityMenuItemSettingProvider({ children }: { children: ReactNode }): 
   if (!quality) return children;
 
   const { state, options, value } = quality;
-  const label = options.find((option) => option.value === value)?.label ?? resolveTranslation(t, 'Auto');
+  const label =
+    options.find((option) => option.value === value)?.label ?? resolveTranslation(t, 'menu.auto', { default: 'Auto' });
 
   return (
     <MenuItemSettingContextProvider value={{ type: 'quality', label, availability: state.availability }}>

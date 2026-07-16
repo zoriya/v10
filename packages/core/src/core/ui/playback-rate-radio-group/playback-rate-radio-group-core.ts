@@ -2,7 +2,8 @@ import { createState } from '@videojs/store';
 import { defaults } from '@videojs/utils/object';
 import { isUndefined } from '@videojs/utils/predicate';
 import type { NonNullableObject } from '@videojs/utils/types';
-
+import { type Text, textValue } from '../../i18n';
+import { rate } from '../../i18n/text/playback';
 import type { MediaPlaybackRateState } from '../../media/state';
 import type { ButtonState } from '../types';
 import { resolveLabel } from '../utils/resolve-label';
@@ -53,10 +54,10 @@ export class PlaybackRateRadioGroupCore {
     this.#props = defaults(props, PlaybackRateRadioGroupCore.defaultProps);
   }
 
-  getLabel(state: PlaybackRateRadioGroupState): string {
+  getLabel(state: PlaybackRateRadioGroupState): Text | string {
     const custom = resolveLabel(this.#props.label, state);
     if (custom !== undefined) return custom;
-    return 'Playback rate {rate}';
+    return rate;
   }
 
   getLabelParams(state: PlaybackRateRadioGroupState): { rate: number } | undefined {
@@ -95,7 +96,7 @@ export class PlaybackRateRadioGroupCore {
       disabled: this.#props.disabled || media.playbackRates.length === 0,
       availability,
     });
-    this.state.patch({ label: this.getLabel(this.state.current) });
+    this.state.patch({ label: textValue(this.getLabel(this.state.current)) });
 
     return this.state.current;
   }

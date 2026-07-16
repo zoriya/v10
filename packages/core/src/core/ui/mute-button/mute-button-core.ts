@@ -1,7 +1,8 @@
 import { createState } from '@videojs/store';
 import { defaults } from '@videojs/utils/object';
 import type { NonNullableObject } from '@videojs/utils/types';
-
+import { type Text, textValue } from '../../i18n';
+import { mute, unmute } from '../../i18n/text/buttons';
 import type { MediaVolumeState } from '../../media/state';
 import type { ButtonState } from '../types';
 import { resolveLabel } from '../utils/resolve-label';
@@ -49,11 +50,11 @@ export class MuteButtonCore {
     this.#props = defaults(props, MuteButtonCore.defaultProps);
   }
 
-  getLabel(state: MuteButtonState): string {
+  getLabel(state: MuteButtonState): Text | string {
     const label = resolveLabel(this.#props.label, state);
     if (label) return label;
 
-    return state.muted ? 'Unmute' : 'Mute';
+    return state.muted ? unmute : mute;
   }
 
   getAttrs(state: MuteButtonState) {
@@ -70,7 +71,7 @@ export class MuteButtonCore {
   getState(): MuteButtonState {
     const media = this.#media!;
     this.state.patch({ muted: media.muted || media.volume === 0, volumeLevel: getVolumeLevel(media) });
-    this.state.patch({ label: this.getLabel(this.state.current) });
+    this.state.patch({ label: textValue(this.getLabel(this.state.current)) });
 
     return this.state.current;
   }

@@ -86,7 +86,7 @@ function PlaybackRateRadioGroup(): ReactNode {
       className="media-menu__group"
       value={value}
       onValueChange={setValue}
-      aria-label={t('Playback rate')}
+      aria-label={t('menu.playbackRate', { default: 'Playback rate' })}
     >
       {options.map((option) => (
         <Menu.RadioItem key={option.value} className="media-menu__item" value={option.value} disabled={option.disabled}>

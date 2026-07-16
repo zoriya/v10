@@ -177,7 +177,7 @@ describe('TooltipElement', () => {
   });
 
   it('shows translated label from the trigger control', async () => {
-    registerI18n('es', { Play: 'Reproducir' });
+    registerI18n('es', { 'buttons.play': 'Reproducir' });
 
     ensureDefined(TestPlayerProviderElement);
     ensureDefined(PlayButtonElement);
@@ -206,8 +206,8 @@ describe('TooltipElement', () => {
   });
 
   it('updates tooltip text when provider locale changes', async () => {
-    registerI18n('es', { Play: 'Reproducir' });
-    registerI18n('fr', { Play: 'Lire' });
+    registerI18n('es', { 'buttons.play': 'Reproducir' });
+    registerI18n('fr', { 'buttons.play': 'Lire' });
 
     ensureDefined(TestPlayerProviderElement);
     ensureDefined(PlayButtonElement);
@@ -242,7 +242,7 @@ describe('TooltipElement', () => {
   });
 
   it('falls back to translating getLabel when getResolvedLabel is undefined', async () => {
-    registerI18n('es', { Play: 'Reproducir' });
+    registerI18n('es', { 'buttons.play': 'Reproducir' });
 
     class StubTrigger extends HTMLElement {
       static readonly tagName = 'stub-tooltip-trigger';
@@ -250,7 +250,7 @@ describe('TooltipElement', () => {
       readonly $state = { subscribe: () => () => {} };
 
       getLabel(): string {
-        return 'Play';
+        return 'buttons.play';
       }
 
       getResolvedLabel(): undefined {

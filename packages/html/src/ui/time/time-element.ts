@@ -1,6 +1,7 @@
 import { TimeCore, TimeDataAttrs, type TimeType } from '@videojs/core';
 import { applyElementProps, applyStateDataAttrs, logMissingFeature, selectTime } from '@videojs/core/dom';
-import { resolveTranslation } from '@videojs/core/i18n';
+import { resolveText } from '@videojs/core/i18n';
+import { remainingSuffix } from '@videojs/core/i18n/text/time';
 import type { PropertyDeclarationMap, PropertyValues } from '@videojs/element';
 import { isInteractiveActivation } from '@videojs/utils/dom';
 import { formatTimeAsPhrase } from '@videojs/utils/time';
@@ -98,7 +99,7 @@ export class TimeElement extends MediaElement {
     const attrs = this.#core.getAttrs(state, this.type);
     applyElementProps(this, {
       ...attrs,
-      'aria-label': resolveTranslation(this.#i18n.value, attrs['aria-label'], this.#getLabelParams(state)),
+      'aria-label': resolveText(attrs['aria-label'], this.#i18n.value, this.#getLabelParams(state)),
     });
     applyStateDataAttrs(this, state, TimeDataAttrs);
   }
@@ -110,7 +111,7 @@ export class TimeElement extends MediaElement {
     }
 
     return {
-      duration: resolveTranslation(this.#i18n.value, '{duration} remaining', {
+      duration: resolveText(remainingSuffix, this.#i18n.value, {
         duration: formatTimeAsPhrase(Math.abs(state.seconds), { locale: this.#i18n.locale }),
       }),
     };

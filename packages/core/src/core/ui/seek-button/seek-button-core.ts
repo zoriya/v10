@@ -1,7 +1,8 @@
 import { createState } from '@videojs/store';
 import { defaults } from '@videojs/utils/object';
 import type { NonNullableObject } from '@videojs/utils/types';
-
+import { type Text, textValue } from '../../i18n';
+import { backward, forward } from '../../i18n/text/seek';
 import type { MediaTimeState } from '../../media/state';
 import type { ButtonState } from '../types';
 import { resolveLabel } from '../utils/resolve-label';
@@ -48,11 +49,11 @@ export class SeekButtonCore {
     this.#props = defaults(props, SeekButtonCore.defaultProps);
   }
 
-  getLabel(state: SeekButtonState): string {
+  getLabel(state: SeekButtonState): Text | string {
     const custom = resolveLabel(this.#props.label, state);
     if (custom !== undefined) return custom;
 
-    return state.direction === 'backward' ? 'Seek backward {seconds} seconds' : 'Seek forward {seconds} seconds';
+    return state.direction === 'backward' ? backward : forward;
   }
 
   getLabelParams(state: SeekButtonState): { seconds: number } | undefined {
@@ -76,7 +77,7 @@ export class SeekButtonCore {
     const direction: SeekButtonDirection = this.#props.seconds < 0 ? 'backward' : 'forward';
 
     this.state.patch({ seeking: media.seeking, direction });
-    this.state.patch({ label: this.getLabel(this.state.current) });
+    this.state.patch({ label: textValue(this.getLabel(this.state.current)) });
 
     return this.state.current;
   }

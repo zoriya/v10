@@ -1,7 +1,8 @@
 import { createState } from '@videojs/store';
 import { defaults } from '@videojs/utils/object';
 import type { NonNullableObject } from '@videojs/utils/types';
-
+import { type Text, textValue } from '../../i18n/text';
+import { audio } from '../../i18n/text/menu';
 import type { MediaAudioTrack, MediaAudioTrackState } from '../../media/state';
 import type { ButtonState } from '../types';
 import { resolveLabel } from '../utils/resolve-label';
@@ -10,14 +11,14 @@ export interface AudioTrackRadioGroupProps {
   /** Custom label for the options group. */
   label?: string | ((state: AudioTrackRadioGroupState) => string) | undefined;
   /** Custom formatter for visible track labels. */
-  formatTrack?: ((track: MediaAudioTrack) => string) | undefined;
+  formatTrack?: ((track: MediaAudioTrack) => Text | string) | undefined;
   /** Whether audio track selection is disabled. */
   disabled?: boolean | undefined;
 }
 
 export interface AudioTrackRadioGroupTrack {
   value: string;
-  label: string;
+  label: Text | string;
 }
 
 export interface AudioTrackRadioGroupState extends ButtonState {
@@ -27,11 +28,11 @@ export interface AudioTrackRadioGroupState extends ButtonState {
   availability: 'available' | 'unavailable';
 }
 
-function formatTrackLabel(track: MediaAudioTrack): string {
+function formatTrackLabel(track: MediaAudioTrack): Text | string {
   if (track.label) return track.label;
   if (track.language) return track.language;
   if (track.kind) return track.kind;
-  return 'Audio';
+  return audio;
 }
 
 function getTrackValue(track: MediaAudioTrack, index: number): string {
@@ -64,14 +65,14 @@ export class AudioTrackRadioGroupCore {
     this.#props = defaults(props, AudioTrackRadioGroupCore.defaultProps);
   }
 
-  getLabel(state: AudioTrackRadioGroupState): string {
+  getLabel(state: AudioTrackRadioGroupState): Text | string {
     const label = resolveLabel(this.#props.label, state);
     if (label) return label;
 
-    return 'Audio';
+    return audio;
   }
 
-  getTrackLabel(track: MediaAudioTrack): string {
+  getTrackLabel(track: MediaAudioTrack): Text | string {
     return this.#props.formatTrack(track);
   }
 
@@ -101,7 +102,7 @@ export class AudioTrackRadioGroupCore {
       disabled: this.#props.disabled || availability === 'unavailable',
       availability,
     });
-    this.state.patch({ label: this.getLabel(this.state.current) });
+    this.state.patch({ label: textValue(this.getLabel(this.state.current)) });
 
     return this.state.current;
   }
