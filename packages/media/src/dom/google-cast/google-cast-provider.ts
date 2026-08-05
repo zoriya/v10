@@ -174,7 +174,16 @@ export class GoogleCastProvider {
         : chrome.cast.media.StreamType.BUFFERED;
 
     mediaInfo.metadata = new chrome.cast.media.GenericMediaMetadata();
-    mediaInfo.metadata.images = [new chrome.cast.Image((target as HTMLVideoElement | null)?.poster ?? '')];
+    const castMeta = (mediaInfo.customData ?? {}) as {
+      title?: unknown;
+      subtitle?: unknown;
+      poster?: unknown;
+    };
+    if (typeof castMeta.title === 'string') mediaInfo.metadata.title = castMeta.title;
+    if (typeof castMeta.subtitle === 'string') mediaInfo.metadata.subtitle = castMeta.subtitle;
+    const castImage =
+      typeof castMeta.poster === 'string' ? castMeta.poster : (target as HTMLVideoElement | null)?.poster;
+    if (castImage) mediaInfo.metadata.images = [new chrome.cast.Image(castImage)];
 
     if (await isHls(this.#googleCast.src)) {
       mediaInfo.contentType ||= 'application/x-mpegURL';
