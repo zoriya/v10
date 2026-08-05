@@ -56,6 +56,8 @@ export function HlsJsMediaMediaTracksMixin<Base extends Constructor<MediaTracksH
 
       engine.on(Hls.Events.MANIFEST_PARSED, this.#onManifestParsed);
       engine.on(Hls.Events.AUDIO_TRACKS_UPDATED, this.#onAudioTracksUpdated);
+      engine.on(Hls.Events.AUDIO_TRACK_SWITCHING, this.#onAudioTrackSwitched);
+      engine.on(Hls.Events.AUDIO_TRACK_SWITCHED, this.#onAudioTrackSwitched);
       engine.on(Hls.Events.LEVELS_UPDATED, this.#onLevelsUpdated);
       engine.on(Hls.Events.LEVEL_SWITCHED, this.#onLevelSwitched);
       engine.once(Hls.Events.DESTROYING, this.#teardown);
@@ -87,15 +89,37 @@ export function HlsJsMediaMediaTracksMixin<Base extends Constructor<MediaTracksH
     };
 
     #onAudioTracksUpdated = (_event: string, data: { audioTracks: HlsJsMediaAudioTrack[] }) => {
+      if (this.#audioTracksMatch(data.audioTracks)) return;
+
       this.#removeAudioTracks();
 
       for (const hlsAudioTrack of data.audioTracks) {
         const kind = hlsAudioTrack.default ? 'main' : 'alternative';
         const audioTrack = this.addAudioTrack(kind, hlsAudioTrack.name, hlsAudioTrack.lang);
         audioTrack.id = `${hlsAudioTrack.id}`;
-        audioTrack.enabled = Boolean(hlsAudioTrack.default);
       }
     };
+
+    #onAudioTrackSwitched = (_event: string, data: { id: number }) => {
+      const selectedId = `${data.id}`;
+      for (const track of this.audioTracks) {
+        track.enabled = track.id === selectedId;
+      }
+    };
+
+    #audioTracksMatch(incoming: HlsJsMediaAudioTrack[]): boolean {
+      const current = [...this.audioTracks];
+      if (current.length !== incoming.length) return false;
+
+      return incoming.every((hlsAudioTrack, index) => {
+        const existing = current[index];
+        return (
+          existing?.id === `${hlsAudioTrack.id}` &&
+          existing.label === (hlsAudioTrack.name ?? '') &&
+          existing.language === (hlsAudioTrack.lang ?? '')
+        );
+      });
+    }
 
     #switchAudioTrack = () => {
       const { engine } = this;
@@ -153,6 +177,8 @@ export function HlsJsMediaMediaTracksMixin<Base extends Constructor<MediaTracksH
 
       engine?.off(Hls.Events.MANIFEST_PARSED, this.#onManifestParsed);
       engine?.off(Hls.Events.AUDIO_TRACKS_UPDATED, this.#onAudioTracksUpdated);
+      engine?.off(Hls.Events.AUDIO_TRACK_SWITCHING, this.#onAudioTrackSwitched);
+      engine?.off(Hls.Events.AUDIO_TRACK_SWITCHED, this.#onAudioTrackSwitched);
       engine?.off(Hls.Events.LEVELS_UPDATED, this.#onLevelsUpdated);
       engine?.off(Hls.Events.LEVEL_SWITCHED, this.#onLevelSwitched);
       engine?.off(Hls.Events.DESTROYING, this.#teardown);

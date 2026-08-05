@@ -48,6 +48,9 @@ const manifestParsed = (engine: Hls, levels: Array<Record<string, unknown>>) =>
 const audioTracksUpdated = (engine: Hls, audioTracks: Array<Record<string, unknown>>) =>
   (engine as any).emit(Hls.Events.AUDIO_TRACKS_UPDATED, { audioTracks });
 
+const audioTrackSwitched = (engine: Hls, track: Record<string, unknown>) =>
+  (engine as any).emit(Hls.Events.AUDIO_TRACK_SWITCHED, track);
+
 function flush() {
   return Promise.resolve();
 }
@@ -69,7 +72,7 @@ describe('HlsJsMediaMediaTracksMixin', () => {
     expect([...host.videoRenditions].map((rendition) => rendition.height)).toEqual([1080, 360]);
   });
 
-  it('mirrors alternate audio tracks and enables the default', () => {
+  it('mirrors alternate audio tracks', () => {
     const engine = createEngine();
     const host = new HlsJsMediaMediaTracks(engine);
 
@@ -79,9 +82,9 @@ describe('HlsJsMediaMediaTracksMixin', () => {
     ]);
 
     expect(host.audioTracks.length).toBe(2);
-    expect(host.audioTracks[0]?.enabled).toBe(true);
-    expect(host.audioTracks[1]?.enabled).toBe(false);
-    expect(host.audioTracks[1]?.label).toBe('Spanish');
+    expect([...host.audioTracks].map((track) => track.id)).toEqual(['0', '1']);
+    expect([...host.audioTracks].map((track) => track.label)).toEqual(['English', 'Spanish']);
+    expect([...host.audioTracks].map((track) => track.language)).toEqual(['en', 'es']);
   });
 
   it('forwards a rendition selection to engine.nextLevel', async () => {
@@ -168,6 +171,105 @@ describe('HlsJsMediaMediaTracksMixin', () => {
     expect(engine.audioTrack).toBe(1);
     expect(english!.enabled).toBe(false);
     expect(spanish!.enabled).toBe(true);
+  });
+
+  it('preserves the audio selection when an identical track list is re-emitted', async () => {
+    const engine = createEngine();
+    const host = new HlsJsMediaMediaTracks(engine);
+
+    audioTracksUpdated(engine, [
+      { id: 0, default: true, name: 'English', lang: 'en' },
+      { id: 1, name: 'Spanish', lang: 'es' },
+    ]);
+
+    // User picks the non-default track.
+    const [english, spanish] = [...host.audioTracks];
+    english!.enabled = false;
+    spanish!.enabled = true;
+    await flush();
+    expect(engine.audioTrack).toBe(1);
+
+    // A rendition switch moves to a different audio group; hls.js re-emits the
+    // same set of languages (reindexed to the same ids). The selection must
+    // survive rather than snap back to the default.
+    audioTracksUpdated(engine, [
+      { id: 0, default: true, name: 'English', lang: 'en' },
+      { id: 1, name: 'Spanish', lang: 'es' },
+    ]);
+    await flush();
+
+    expect(host.audioTracks[0]?.enabled).toBe(false);
+    expect(host.audioTracks[1]?.enabled).toBe(true);
+  });
+
+  it('reflects the engine audio selection from the switch event', async () => {
+    const engine = createEngine();
+    const host = new HlsJsMediaMediaTracks(engine);
+
+    audioTracksUpdated(engine, [
+      { id: 0, default: true, name: 'English', lang: 'en' },
+      { id: 1, name: 'Spanish', lang: 'es' },
+    ]);
+
+    // hls.js selects the non-default track on its own (e.g. audioPreference).
+    (engine as any).audioTrack = 1;
+    audioTrackSwitched(engine, { id: 1, name: 'Spanish', lang: 'es' });
+    await flush();
+
+    expect(host.audioTracks[0]?.enabled).toBe(false);
+    expect(host.audioTracks[1]?.enabled).toBe(true);
+  });
+
+  it('keeps the selection across a group switch that clears engine.audioTrack', async () => {
+    const engine = createEngine();
+    const host = new HlsJsMediaMediaTracks(engine);
+
+    audioTracksUpdated(engine, [
+      { id: 0, default: true, name: 'English', lang: 'en' },
+      { id: 1, name: 'Spanish', lang: 'es' },
+    ]);
+
+    // User picks Spanish.
+    const [english, spanish] = [...host.audioTracks];
+    english!.enabled = false;
+    spanish!.enabled = true;
+    await flush();
+    expect(engine.audioTrack).toBe(1);
+
+    // Rendition switch → new audio group. hls.js clears its selection (-1),
+    // re-emits the same list, then re-applies the matched track. `.default`
+    // (English) must not win.
+    (engine as any).audioTrack = -1;
+    audioTracksUpdated(engine, [
+      { id: 0, default: true, name: 'English', lang: 'en' },
+      { id: 1, name: 'Spanish', lang: 'es' },
+    ]);
+    (engine as any).audioTrack = 1;
+    audioTrackSwitched(engine, { id: 1, name: 'Spanish', lang: 'es' });
+    await flush();
+
+    expect(host.audioTracks[0]?.enabled).toBe(false);
+    expect(host.audioTracks[1]?.enabled).toBe(true);
+  });
+
+  it('rebuilds the list when the audio track set changes', () => {
+    const engine = createEngine();
+    const host = new HlsJsMediaMediaTracks(engine);
+
+    audioTracksUpdated(engine, [
+      { id: 0, default: true, name: 'English', lang: 'en' },
+      { id: 1, name: 'Spanish', lang: 'es' },
+    ]);
+
+    // A genuinely different list (extra language) forces a rebuild.
+    audioTracksUpdated(engine, [
+      { id: 0, default: true, name: 'English', lang: 'en' },
+      { id: 1, name: 'Spanish', lang: 'es' },
+      { id: 2, name: 'French', lang: 'fr' },
+    ]);
+
+    expect(host.audioTracks.length).toBe(3);
+    expect([...host.audioTracks].map((track) => track.label)).toEqual(['English', 'Spanish', 'French']);
   });
 
   it('clears all media tracks on DESTROYING', () => {
