@@ -1,0 +1,12 @@
+//#region src/dom/locale/merge-locale-overlays.d.ts
+/**
+ * Loads overlay layers for each resolved locale key, least-specific first, then merges
+ * most-specific-last (same semantics as the core i18n registry).
+ */
+declare function mergeLocaleOverlays<Overlay extends object>(locale: string, load: (tag: string) => Promise<Partial<Overlay> | undefined>, findKeys: (locale: string) => string[]): Promise<{
+  merged: Partial<Overlay>;
+  loadedTags: string[];
+}>;
+//#endregion
+export { mergeLocaleOverlays };
+//# sourceMappingURL=merge-locale-overlays.d.ts.map

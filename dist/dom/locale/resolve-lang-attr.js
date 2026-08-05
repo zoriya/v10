@@ -1,0 +1,14 @@
+import { isUndefined } from "../../predicate/predicate.js";
+//#region src/dom/locale/resolve-lang-attr.ts
+/**
+* Normalizes a raw `lang` string (e.g. from {@link findNearestLang}): empty or whitespace-only →
+* `undefined`, otherwise the trimmed value.
+*/
+function resolveLangAttr(raw) {
+	if (isUndefined(raw) || raw.trim() === "") return;
+	return raw.trim();
+}
+//#endregion
+export { resolveLangAttr };
+
+//# sourceMappingURL=resolve-lang-attr.js.map

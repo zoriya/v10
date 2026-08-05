@@ -1,0 +1,6 @@
+//#region src/jwt/parse-jwt.d.ts
+/** Decode the payload of a JWT without verifying its signature, `undefined` for malformed tokens. */
+declare function parseJwt<Payload = Record<string, unknown>>(token: string | undefined): Partial<Payload> | undefined;
+//#endregion
+export { parseJwt };
+//# sourceMappingURL=parse-jwt.d.ts.map
