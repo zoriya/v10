@@ -1,0 +1,16 @@
+import { MediaContainerData } from "../../media/types/index.js";
+//#region src/playback/primitives/derive-start-media-time.d.ts
+/** The selected v/a track ids a {@link DeriveStartMediaTime} may coordinate across. */
+interface DeriveStartMediaTimeContext {
+  selectedVideoTrackId?: string;
+  selectedAudioTrackId?: string;
+}
+/**
+ * Reduce the discovered {@link MediaContainerData} (keyed by track type) into each type's
+ * `startMediaTime` origin; `undefined` means "not ready yet". Pure and injected — the single
+ * coordination seam the reactor and the loader stamp share.
+ */
+type DeriveStartMediaTime = (containerData: Record<string, MediaContainerData>, ctx: DeriveStartMediaTimeContext) => Record<string, number | undefined>;
+//#endregion
+export { DeriveStartMediaTime, DeriveStartMediaTimeContext };
+//# sourceMappingURL=derive-start-media-time.d.ts.map
