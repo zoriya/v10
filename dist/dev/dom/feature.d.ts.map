@@ -1,0 +1,1 @@
+{"version":3,"file":"feature.d.ts","names":[],"sources":["../../../src/dom/feature.ts"],"mappings":";;;UAIiB,0BAA0B,QAAQ,eAAe,cAAc;GAC7E,SAAS,SAAS,cAAc;;UAGlB,gCAAgC,QAAQ,eAC/C,KAAK,YAAY,cAAc;EACvC,QAAQ,KAAK,aAAa,eAAe,QAAQ,WAAW;EAC5D,UAAU,KAAK,cAAc,cAAc,QAAQ,QAAQ;;iBAK7C,oBAAoB,OAAO,QAAQ,YAAY,cAAc,SAAS,cAAc;iBACpF,oBAAoB,QAAQ,OAC1C,QAAQ,gCAAgC,QAAQ,QAChD,eAAe,SACd,0BAA0B,QAAQ"}

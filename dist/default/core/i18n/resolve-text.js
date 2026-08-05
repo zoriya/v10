@@ -1,0 +1,8 @@
+//#region src/core/i18n/resolve-text.ts
+function resolveText(text) {
+	return typeof text === "string" ? text : text.text;
+}
+//#endregion
+export { resolveText };
+
+//# sourceMappingURL=resolve-text.js.map

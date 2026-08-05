@@ -1,0 +1,17 @@
+//#region src/core/ui/slider/slider-data-attrs.ts
+const SliderDataAttrs = {
+	/** Present when the user is actively dragging. */
+	dragging: "data-dragging",
+	/** Present when the pointer is over the slider. */
+	pointing: "data-pointing",
+	/** Present when dragging or pointing is active. */
+	interactive: "data-interactive",
+	/** Current axis of slider movement (`horizontal` or `vertical`). */
+	orientation: "data-orientation",
+	/** Present when the slider is non-interactive. */
+	disabled: "data-disabled"
+};
+//#endregion
+export { SliderDataAttrs };
+
+//# sourceMappingURL=slider-data-attrs.js.map

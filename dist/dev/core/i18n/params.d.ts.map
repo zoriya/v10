@@ -1,0 +1,1 @@
+{"version":3,"file":"params.d.ts","names":[],"sources":["../../../../src/core/i18n/params.ts"],"mappings":";;;;;KAKY,iBAAiB;;UAGZ;YACL,uBAAuB;;KAKvB,uBAAuB;KAE9B,mBACF,OAAO,iBAAiB,kBAAkB,6BAA6B,OACxE;KAEG,mBAAmB,UACtB,eAAe,0BACX,uBAEK,cAAc,kBAAkB,aAAa,kBACxC;KAIX,4BACF,OAAO,gBAAgB,mBAAmB,kBAAkB;;KAInD,sBACT,OAAO,kBAAkB,kBAAkB,8BAExC,kBAAkB,yBAChB,uBAAuB,mBAE3B"}

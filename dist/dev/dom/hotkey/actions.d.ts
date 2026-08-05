@@ -1,0 +1,15 @@
+import { AnyPlayerStore } from "../player.js";
+//#region src/dom/hotkey/actions.d.ts
+type HotkeyActionName = 'togglePaused' | 'toggleMuted' | 'toggleFullscreen' | 'toggleSubtitles' | 'togglePictureInPicture' | 'seekStep' | 'volumeStep' | 'speedUp' | 'speedDown' | 'seekToPercent';
+interface HotkeyActionContext {
+  store: AnyPlayerStore;
+  value?: number | undefined;
+  /** The matched key character (used by `seekToPercent` to derive digit). */
+  key: string;
+}
+type HotkeyActionResolver = (context: HotkeyActionContext) => void;
+declare function isHotkeyToggleAction(action: string): boolean;
+declare function resolveHotkeyAction(name: string): HotkeyActionResolver | undefined;
+//#endregion
+export { HotkeyActionContext, HotkeyActionName, HotkeyActionResolver, isHotkeyToggleAction, resolveHotkeyAction };
+//# sourceMappingURL=actions.d.ts.map

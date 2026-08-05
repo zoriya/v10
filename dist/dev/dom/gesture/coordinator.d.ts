@@ -1,0 +1,23 @@
+import { GestureActivateEvent, GestureBinding } from "./gesture.js";
+//#region src/dom/gesture/coordinator.d.ts
+declare class GestureCoordinator {
+  #private;
+  constructor(target: HTMLElement);
+  get bindings(): readonly GestureBinding[];
+  subscribe(callback: (event: GestureActivateEvent) => void): () => void;
+  /**
+   * Whether a registered binding claims this tap for the given action. A claimed tap
+   * belongs to the gesture layer, so callers should leave it alone. Taps on interactive
+   * targets (buttons, sliders) are never claimed — the same filtering the pointerup
+   * listener applies. A disabled binding still claims: disabling a gesture opts out of
+   * the action, it doesn't hand the tap back to a fallback handler.
+   */
+  claimsTap(event: PointerEvent, action: string): boolean;
+  add(binding: GestureBinding): () => void;
+}
+/** Look up the gesture coordinator for a target element, if one exists. */
+declare function findGestureCoordinator(target: HTMLElement): GestureCoordinator | undefined;
+declare function getGestureCoordinator(target: HTMLElement): GestureCoordinator;
+//#endregion
+export { GestureCoordinator, findGestureCoordinator, getGestureCoordinator };
+//# sourceMappingURL=coordinator.d.ts.map

@@ -1,0 +1,35 @@
+import { Text } from "../../i18n/text.js";
+import "../../../i18n.js";
+import { ButtonState } from "../types.js";
+import { MediaPlaybackState } from "@videojs/media";
+import { NonNullableObject } from "@videojs/utils/types";
+//#region src/core/ui/play-button/play-button-core.d.ts
+interface PlayButtonProps {
+  /** Custom label for the button. */
+  label?: Text | string | ((state: PlayButtonState) => Text | string) | undefined;
+  /** Whether the button is disabled. */
+  disabled?: boolean | undefined;
+}
+interface PlayButtonState extends Pick<MediaPlaybackState, 'paused' | 'ended' | 'started'>, ButtonState {}
+declare class PlayButtonCore {
+  #private;
+  static readonly defaultProps: NonNullableObject<PlayButtonProps>;
+  readonly state: import("@videojs/store").WritableState<PlayButtonState>;
+  constructor(props?: PlayButtonProps);
+  setProps(props: PlayButtonProps): void;
+  getLabel(state: PlayButtonState): Text | string;
+  getAttrs(state: PlayButtonState): {
+    'aria-label': string | Text;
+    'aria-disabled': string | undefined;
+  };
+  setMedia(media: MediaPlaybackState): void;
+  getState(): PlayButtonState;
+  toggle(media: MediaPlaybackState): Promise<void>;
+}
+declare namespace PlayButtonCore {
+  type Props = PlayButtonProps;
+  type State = PlayButtonState;
+}
+//#endregion
+export { PlayButtonCore, PlayButtonProps, PlayButtonState };
+//# sourceMappingURL=play-button-core.d.ts.map

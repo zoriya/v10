@@ -1,0 +1,17 @@
+import { MediaControlsState } from "@videojs/media";
+//#region src/core/ui/controls/controls-core.d.ts
+interface ControlsState {
+  visible: boolean;
+  userActive: boolean;
+}
+declare class ControlsCore {
+  #private;
+  setMedia(media: MediaControlsState): void;
+  getState(): ControlsState;
+}
+declare namespace ControlsCore {
+  type State = ControlsState;
+}
+//#endregion
+export { ControlsCore, ControlsState };
+//# sourceMappingURL=controls-core.d.ts.map
