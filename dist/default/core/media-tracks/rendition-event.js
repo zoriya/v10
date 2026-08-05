@@ -1,0 +1,12 @@
+//#region src/core/media-tracks/rendition-event.ts
+var RenditionEvent = class extends Event {
+	rendition;
+	constructor(type, init) {
+		super(type);
+		this.rendition = init.rendition;
+	}
+};
+//#endregion
+export { RenditionEvent };
+
+//# sourceMappingURL=rendition-event.js.map

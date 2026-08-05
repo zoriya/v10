@@ -1,0 +1,39 @@
+import { addRendition, removeRendition } from "./video-rendition-list.js";
+import { VideoRendition } from "./video-rendition.js";
+import { selectedChanged } from "./video-track-list.js";
+//#region src/core/media-tracks/video-track.ts
+var VideoTrack = class {
+	id;
+	kind;
+	label = "";
+	language = "";
+	sourceBuffer;
+	#selected = false;
+	addRendition(src, width, height, codec, bitrate, frameRate) {
+		const rendition = new VideoRendition();
+		rendition.src = src;
+		rendition.width = width;
+		rendition.height = height;
+		rendition.frameRate = frameRate;
+		rendition.bitrate = bitrate;
+		rendition.codec = codec;
+		addRendition(this, rendition);
+		return rendition;
+	}
+	removeRendition(rendition) {
+		removeRendition(rendition);
+	}
+	get selected() {
+		return this.#selected;
+	}
+	set selected(value) {
+		if (this.#selected === value) return;
+		this.#selected = value;
+		if (value !== true) return;
+		selectedChanged(this);
+	}
+};
+//#endregion
+export { VideoTrack };
+
+//# sourceMappingURL=video-track.js.map

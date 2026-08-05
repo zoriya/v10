@@ -1,0 +1,12 @@
+//#region src/core/media-tracks/change-event.ts
+var TrackEvent = class extends Event {
+	track;
+	constructor(type, init) {
+		super(type);
+		this.track = init.track;
+	}
+};
+//#endregion
+export { TrackEvent };
+
+//# sourceMappingURL=change-event.js.map

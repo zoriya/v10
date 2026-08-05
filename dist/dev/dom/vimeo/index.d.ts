@@ -1,0 +1,2 @@
+import { VimeoConfig, VimeoMedia, VimeoMediaProps, VimeoPlayerApi, VimeoSource, buildVimeoIframeSrc, parseVimeoSource, parseVimeoVideoId, vimeoMediaDefaultProps } from "./media.js";
+export { VimeoConfig, VimeoMedia, VimeoMediaProps, VimeoPlayerApi, VimeoSource, buildVimeoIframeSrc, parseVimeoSource, parseVimeoVideoId, vimeoMediaDefaultProps };

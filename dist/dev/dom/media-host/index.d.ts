@@ -1,0 +1,3 @@
+import { addMediaComponent, getMediaComponents, getMediaOwner, getMediaProp, setMediaProp } from "../utils/media-components.js";
+import { HTMLMediaElementHost, HTMLMediaTargetLike, MediaComponent, MediaComponentConstructor, MediaComponents, MediaConfig } from "./media-host.js";
+export { HTMLMediaElementHost, HTMLMediaTargetLike, MediaComponent, MediaComponentConstructor, MediaComponents, MediaConfig, addMediaComponent, getMediaComponents, getMediaOwner, getMediaProp, setMediaProp };

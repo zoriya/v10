@@ -1,0 +1,17 @@
+//#region src/core/media-tracks/audio-rendition.d.ts
+/**
+ * The consumer should use the `selected` setter to select one or multiple
+ * renditions that the engine is allowed to play.
+ */
+declare class AudioRendition {
+  #private;
+  src: string | undefined;
+  id: string | undefined;
+  bitrate: number | undefined;
+  codec: string | undefined;
+  get selected(): boolean;
+  set selected(value: boolean);
+}
+//#endregion
+export { AudioRendition };
+//# sourceMappingURL=audio-rendition.d.ts.map
