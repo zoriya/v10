@@ -1,0 +1,131 @@
+{
+  "name": "@videojs/react",
+  "type": "module",
+  "version": "10.0.0-beta.26",
+  "description": "React library for building media players",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/videojs/v10",
+    "directory": "packages/react"
+  },
+  "main": "dist/default/index.js",
+  "module": "dist/default/index.js",
+  "types": "dist/dev/index.d.ts",
+  "sideEffects": [
+    "./dist/*/i18n/locales/*/register.js"
+  ],
+  "files": [
+    "dist",
+    "docs"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/dev/index.d.ts",
+      "development": "./dist/dev/index.js",
+      "default": "./dist/default/index.js"
+    },
+    "./*.css": "./dist/default/*.css",
+    "./icons": {
+      "types": "./dist/dev/icons/index.d.ts",
+      "development": "./dist/dev/icons/index.js",
+      "default": "./dist/default/icons/index.js"
+    },
+    "./icons/*": {
+      "types": "./dist/dev/icons/*/index.d.ts",
+      "development": "./dist/dev/icons/*/index.js",
+      "default": "./dist/default/icons/*/index.js"
+    },
+    "./media/*": {
+      "types": "./dist/dev/media/*/index.d.ts",
+      "development": "./dist/dev/media/*/index.js",
+      "default": "./dist/default/media/*/index.js"
+    },
+    "./video": {
+      "types": "./dist/dev/presets/video/index.d.ts",
+      "development": "./dist/dev/presets/video/index.js",
+      "default": "./dist/default/presets/video/index.js"
+    },
+    "./video/*.css": "./dist/default/presets/video/*.css",
+    "./video/*": {
+      "types": "./dist/dev/presets/video/*.d.ts",
+      "development": "./dist/dev/presets/video/*.js",
+      "default": "./dist/default/presets/video/*.js"
+    },
+    "./audio": {
+      "types": "./dist/dev/presets/audio/index.d.ts",
+      "development": "./dist/dev/presets/audio/index.js",
+      "default": "./dist/default/presets/audio/index.js"
+    },
+    "./audio/*.css": "./dist/default/presets/audio/*.css",
+    "./audio/*": {
+      "types": "./dist/dev/presets/audio/*.d.ts",
+      "development": "./dist/dev/presets/audio/*.js",
+      "default": "./dist/default/presets/audio/*.js"
+    },
+    "./background": {
+      "types": "./dist/dev/presets/background/index.d.ts",
+      "development": "./dist/dev/presets/background/index.js",
+      "default": "./dist/default/presets/background/index.js"
+    },
+    "./background/*.css": "./dist/default/presets/background/*.css",
+    "./background/*": {
+      "types": "./dist/dev/presets/background/*.d.ts",
+      "development": "./dist/dev/presets/background/*.js",
+      "default": "./dist/default/presets/background/*.js"
+    },
+    "./live-video": {
+      "types": "./dist/dev/presets/live-video/index.d.ts",
+      "development": "./dist/dev/presets/live-video/index.js",
+      "default": "./dist/default/presets/live-video/index.js"
+    },
+    "./live-video/*.css": "./dist/default/presets/live-video/*.css",
+    "./live-video/*": {
+      "types": "./dist/dev/presets/live-video/*.d.ts",
+      "development": "./dist/dev/presets/live-video/*.js",
+      "default": "./dist/default/presets/live-video/*.js"
+    },
+    "./live-audio": {
+      "types": "./dist/dev/presets/live-audio/index.d.ts",
+      "development": "./dist/dev/presets/live-audio/index.js",
+      "default": "./dist/default/presets/live-audio/index.js"
+    },
+    "./live-audio/*.css": "./dist/default/presets/live-audio/*.css",
+    "./live-audio/*": {
+      "types": "./dist/dev/presets/live-audio/*.d.ts",
+      "development": "./dist/dev/presets/live-audio/*.js",
+      "default": "./dist/default/presets/live-audio/*.js"
+    },
+    "./i18n": {
+      "types": "./dist/dev/i18n/index.d.ts",
+      "development": "./dist/dev/i18n/index.js",
+      "default": "./dist/default/i18n/index.js"
+    },
+    "./i18n/locales/*": {
+      "types": "./dist/dev/i18n/locales/*.d.ts",
+      "development": "./dist/dev/i18n/locales/*.js",
+      "default": "./dist/default/i18n/locales/*.js"
+    }
+  },
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0",
+    "@videojs/core": "*",
+    "@videojs/media": "*",
+    "@videojs/spf": "*",
+    "@videojs/store": "*",
+    "@videojs/utils": "*"
+  },
+  "dependencies": {},
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "media",
+    "player",
+    "react",
+    "components",
+    "hooks",
+    "videojs"
+  ]
+}

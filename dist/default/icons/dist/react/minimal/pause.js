@@ -1,0 +1,28 @@
+import { jsx, jsxs } from "react/jsx-runtime";
+//#region ../icons/dist/react/minimal/pause.js
+const PauseIcon = (props) => /* @__PURE__ */ jsxs("svg", {
+	xmlns: "http://www.w3.org/2000/svg",
+	width: 18,
+	height: 18,
+	fill: "currentColor",
+	"aria-hidden": "true",
+	viewBox: "0 0 18 18",
+	...props,
+	children: [/* @__PURE__ */ jsx("rect", {
+		width: 4,
+		height: 12,
+		x: 3,
+		y: 3,
+		rx: 1.75
+	}), /* @__PURE__ */ jsx("rect", {
+		width: 4,
+		height: 12,
+		x: 11,
+		y: 3,
+		rx: 1.75
+	})]
+});
+//#endregion
+export { PauseIcon as default };
+
+//# sourceMappingURL=pause.js.map

@@ -1,0 +1,13 @@
+import { UIComponentProps } from "../../utils/types.js";
+import { MuteButtonCore } from "@videojs/core";
+//#region src/ui/mute-button/mute-button.d.ts
+interface MuteButtonProps extends UIComponentProps<'button', MuteButtonCore.State>, MuteButtonCore.Props {}
+/** A button that toggles mute state. */
+declare const MuteButton: import("react").ForwardRefExoticComponent<MuteButtonProps & import("react").RefAttributes<HTMLButtonElement>>;
+declare namespace MuteButton {
+  type Props = MuteButtonProps;
+  type State = MuteButtonCore.State;
+}
+//#endregion
+export { MuteButton, MuteButtonProps };
+//# sourceMappingURL=mute-button.d.ts.map

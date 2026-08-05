@@ -1,0 +1,89 @@
+"use client";
+import { useLocale, useTranslator } from "../../i18n/context.js";
+import { usePlayer } from "../../player/context.js";
+import { renderElement } from "../../utils/use-render.js";
+import { selectTime } from "@videojs/core/dom";
+import { translateText } from "@videojs/core/i18n";
+import { forwardRef, useEffect, useState } from "react";
+import { isInteractiveActivation } from "@videojs/utils/dom";
+import { Fragment, jsx, jsxs } from "react/jsx-runtime";
+import { TimeCore, TimeDataAttrs } from "@videojs/core";
+import { remainingSuffixText } from "@videojs/core/i18n/text/time";
+import { formatTimeAsPhrase } from "@videojs/utils/time";
+//#region src/ui/time/time-value.tsx
+/**
+* Displays a formatted time value (current, duration, or remaining).
+*
+* @example
+* ```tsx
+* <Time.Value />
+* <Time.Value type="duration" />
+* <Time.Value type="remaining" negativeSign="−" />
+* ```
+*/
+const Value = forwardRef(function Value(componentProps, forwardedRef) {
+	const { render, className, style, type, negativeSign, label, toggle = false, ...elementProps } = componentProps;
+	const time = usePlayer(selectTime);
+	const translator = useTranslator();
+	const locale = useLocale();
+	const [core] = useState(() => new TimeCore());
+	const defaultType = type ?? TimeCore.defaultProps.type;
+	const [activeType, setActiveType] = useState(defaultType);
+	useEffect(() => {
+		setActiveType(defaultType);
+	}, [defaultType, toggle]);
+	core.setProps({
+		type: activeType,
+		negativeSign,
+		label,
+		toggle
+	});
+	if (!time) return null;
+	core.setMedia(time);
+	const state = core.getState();
+	const attrs = core.getAttrs(state, defaultType);
+	const resolvedLabelParams = core.getLabelParams(state) ? { duration: state.type === "remaining" ? translateText(remainingSuffixText, translator, { duration: formatTimeAsPhrase(Math.abs(state.seconds), { locale }) }) : formatTimeAsPhrase(Math.abs(state.seconds), { locale }) } : void 0;
+	const content = state.negative ? /* @__PURE__ */ jsxs(Fragment, { children: [/* @__PURE__ */ jsx("span", {
+		"aria-hidden": "true",
+		children: negativeSign ?? TimeCore.defaultProps.negativeSign
+	}), state.text] }) : state.text;
+	const toggleType = () => {
+		setActiveType((value) => {
+			if (defaultType === "current") return value === "remaining" ? "current" : "remaining";
+			return value === "duration" ? "remaining" : "duration";
+		});
+	};
+	const handleClick = (event) => {
+		if (event.defaultPrevented) return;
+		toggleType();
+	};
+	const handleKeyDown = (event) => {
+		if (event.defaultPrevented || !isInteractiveActivation(event.nativeEvent)) return;
+		event.preventDefault();
+		if (event.repeat) return;
+		toggleType();
+	};
+	return renderElement("time", {
+		render,
+		className,
+		style
+	}, {
+		state,
+		stateAttrMap: TimeDataAttrs,
+		ref: [forwardedRef],
+		props: [{
+			dateTime: state.datetime,
+			children: content,
+			...attrs,
+			"aria-label": translateText(attrs["aria-label"], translator, resolvedLabelParams),
+			...toggle ? {
+				onClick: handleClick,
+				onKeyDown: handleKeyDown
+			} : void 0
+		}, elementProps]
+	});
+});
+//#endregion
+export { Value };
+
+//# sourceMappingURL=time-value.js.map

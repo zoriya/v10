@@ -1,0 +1,2 @@
+import { CaptionsOption, CaptionsOptionsProps, CaptionsOptionsResult, useCaptionsOptions } from "./use-captions-options.js";
+export { type CaptionsOption, type CaptionsOptionsProps, type CaptionsOptionsResult, useCaptionsOptions };

@@ -1,0 +1,13 @@
+import { UIComponentProps } from "../../utils/types.js";
+import { PopoverState } from "@videojs/core";
+//#region src/ui/popover/popover-popup.d.ts
+interface PopoverPopupProps extends UIComponentProps<'div', PopoverState> {}
+/** Container for the popover content. Positioned relative to the trigger using CSS anchor positioning with a JavaScript fallback. */
+declare const PopoverPopup: import("react").ForwardRefExoticComponent<Omit<PopoverPopupProps, "ref"> & import("react").RefAttributes<HTMLDivElement>>;
+declare namespace PopoverPopup {
+  type Props = PopoverPopupProps;
+  type State = PopoverState;
+}
+//#endregion
+export { PopoverPopup, PopoverPopupProps };
+//# sourceMappingURL=popover-popup.d.ts.map

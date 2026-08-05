@@ -1,0 +1,42 @@
+/* -------------------------------------------------------------------------- */
+/* Supporting @keyframes, @properties and @theme for Tailwind CSS             */
+/* -------------------------------------------------------------------------- */
+
+/* -------------------------------------------------------------------------- */
+/* Global @keyframes for all video skins (CSS & Tailwind)                     */
+/* -------------------------------------------------------------------------- */
+
+@keyframes media-shake {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  20% {
+    translate: -6px 0;
+  }
+  40% {
+    translate: 4px 0;
+  }
+  60% {
+    translate: -2px 0;
+  }
+  80% {
+    translate: 1px 0;
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Global @properties for all video skins (CSS & Tailwind)                    */
+/* -------------------------------------------------------------------------- */
+
+@property --media-progress-fill {
+  syntax: "<percentage>";
+  inherits: true;
+  initial-value: 0%;
+}
+
+
+@theme {
+  --animate-media-shake: media-shake 300ms ease-in-out;
+}
+

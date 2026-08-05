@@ -1,0 +1,65 @@
+"use client";
+import { PlayerContextProvider, useMedia, usePlayerContext } from "./context.js";
+import { Container } from "./container.js";
+import { useDestroy } from "../utils/use-destroy.js";
+import { createPopupGroup } from "@videojs/core/dom";
+import { combine, createStore } from "@videojs/store";
+import { useStore } from "@videojs/store/react";
+import { useEffect, useMemo, useState } from "react";
+import { jsx } from "react/jsx-runtime";
+//#region src/player/create-player.tsx
+function createPlayer(config) {
+	function Provider({ children }) {
+		const [store, setStore] = useState(() => createStore()(combine(...config.features)));
+		const [popupGroup] = useState(() => createPopupGroup());
+		const [media, setMedia] = useState(null);
+		const [container, setContainer] = useState(null);
+		useDestroy(store);
+		useEffect(() => {
+			if (!media) return;
+			if (store.destroyed) {
+				setStore(createStore()(combine(...config.features)));
+				return;
+			}
+			return store.attach({
+				media,
+				container
+			});
+		}, [
+			media,
+			container,
+			store
+		]);
+		return /* @__PURE__ */ jsx(PlayerContextProvider, {
+			value: useMemo(() => ({
+				store,
+				media,
+				setMedia,
+				container,
+				setContainer,
+				popupGroup
+			}), [
+				store,
+				media,
+				container,
+				popupGroup
+			]),
+			children
+		});
+	}
+	if (config.displayName) Provider.displayName = `${config.displayName}.Provider`;
+	function usePlayer(selector) {
+		const { store } = usePlayerContext();
+		return useStore(store, selector);
+	}
+	return {
+		Provider,
+		Container,
+		usePlayer,
+		useMedia
+	};
+}
+//#endregion
+export { createPlayer };
+
+//# sourceMappingURL=create-player.js.map

@@ -1,0 +1,13 @@
+import { UIComponentProps } from "../../utils/types.js";
+import { FullscreenButtonCore } from "@videojs/core";
+//#region src/ui/fullscreen-button/fullscreen-button.d.ts
+interface FullscreenButtonProps extends UIComponentProps<'button', FullscreenButtonCore.State>, FullscreenButtonCore.Props {}
+/** A button that toggles fullscreen. */
+declare const FullscreenButton: import("react").ForwardRefExoticComponent<FullscreenButtonProps & import("react").RefAttributes<HTMLButtonElement>>;
+declare namespace FullscreenButton {
+  type Props = FullscreenButtonProps;
+  type State = FullscreenButtonCore.State;
+}
+//#endregion
+export { FullscreenButton, FullscreenButtonProps };
+//# sourceMappingURL=fullscreen-button.d.ts.map

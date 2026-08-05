@@ -1,0 +1,20 @@
+import { PopoverChangeDetails, PositioningBoundary } from "@videojs/core/dom";
+import { ReactNode } from "react";
+import { PopoverProps } from "@videojs/core";
+//#region src/ui/popover/popover-root.d.ts
+interface PopoverRootProps extends PopoverProps {
+  /** Boundary used to constrain the popup size. */
+  boundary?: PositioningBoundary;
+  /** Called when the popover open state changes (fires immediately, before animations). */
+  onOpenChange?: (open: boolean, details: PopoverChangeDetails) => void;
+  /** Called after open/close animations complete. */
+  onOpenChangeComplete?: (open: boolean) => void;
+  children?: ReactNode;
+}
+declare function PopoverRoot({ open: controlledOpen, defaultOpen, onOpenChange: onOpenChangeProp, onOpenChangeComplete: onOpenChangeCompleteProp, openOnHover, delay, closeDelay, boundary, children, ...coreProps }: PopoverRootProps): ReactNode;
+declare namespace PopoverRoot {
+  type Props = PopoverRootProps;
+}
+//#endregion
+export { PopoverRoot, PopoverRootProps };
+//# sourceMappingURL=popover-root.d.ts.map

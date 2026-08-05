@@ -1,0 +1,15 @@
+import { UIComponentProps } from "../../utils/types.js";
+import { ReactNode } from "react";
+import { ControlsCore } from "@videojs/core";
+//#region src/ui/controls/controls-group.d.ts
+interface ControlsGroupProps extends UIComponentProps<'div', ControlsCore.State> {
+  children?: ReactNode | undefined;
+}
+/** Layout group for related controls; sets `role="group"` when labeled. */
+declare const ControlsGroup: import("react").ForwardRefExoticComponent<Omit<ControlsGroupProps, "ref"> & import("react").RefAttributes<HTMLDivElement>>;
+declare namespace ControlsGroup {
+  type Props = ControlsGroupProps;
+}
+//#endregion
+export { ControlsGroup, ControlsGroupProps };
+//# sourceMappingURL=controls-group.d.ts.map

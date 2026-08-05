@@ -1,0 +1,17 @@
+import { UIComponentProps } from "../../utils/types.js";
+import { SliderCore } from "@videojs/core";
+//#region src/ui/slider/slider-root.d.ts
+interface SliderRootProps extends UIComponentProps<'div', SliderCore.State>, SliderCore.Props {
+  onValueChange?: ((value: number) => void) | undefined;
+  onValueCommit?: ((value: number) => void) | undefined;
+  onDragStart?: (() => void) | undefined;
+  onDragEnd?: (() => void) | undefined;
+}
+declare const SliderRoot: import("react").ForwardRefExoticComponent<Omit<SliderRootProps, "ref"> & import("react").RefAttributes<HTMLDivElement>>;
+declare namespace SliderRoot {
+  type Props = SliderRootProps;
+  type State = SliderCore.State;
+}
+//#endregion
+export { SliderRoot, SliderRootProps };
+//# sourceMappingURL=slider-root.d.ts.map

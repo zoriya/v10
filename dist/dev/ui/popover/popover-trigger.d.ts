@@ -1,0 +1,13 @@
+import { UIComponentProps } from "../../utils/types.js";
+import { PopoverState } from "@videojs/core";
+//#region src/ui/popover/popover-trigger.d.ts
+interface PopoverTriggerProps extends UIComponentProps<'button', PopoverState> {}
+/** Button that toggles the popover visibility. Renders a `<button>` element. */
+declare const PopoverTrigger: import("react").ForwardRefExoticComponent<Omit<PopoverTriggerProps, "ref"> & import("react").RefAttributes<HTMLButtonElement>>;
+declare namespace PopoverTrigger {
+  type Props = PopoverTriggerProps;
+  type State = PopoverState;
+}
+//#endregion
+export { PopoverTrigger, PopoverTriggerProps };
+//# sourceMappingURL=popover-trigger.d.ts.map

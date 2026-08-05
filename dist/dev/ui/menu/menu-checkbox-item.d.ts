@@ -1,0 +1,20 @@
+import { UIComponentProps } from "../../utils/types.js";
+import { MenuState } from "@videojs/core";
+//#region src/ui/menu/menu-checkbox-item.d.ts
+interface MenuCheckboxItemProps extends UIComponentProps<'div', MenuState> {
+  /** Whether the item is currently checked. */
+  checked: boolean;
+  /** Called when the checked state should change. */
+  onCheckedChange: (checked: boolean) => void;
+  /** Whether the item is disabled. */
+  disabled?: boolean;
+}
+/** A checkbox-style menu item. Renders a `<div>` with `role="menuitemcheckbox"`. */
+declare const MenuCheckboxItem: import("react").ForwardRefExoticComponent<Omit<MenuCheckboxItemProps, "ref"> & import("react").RefAttributes<HTMLDivElement>>;
+declare namespace MenuCheckboxItem {
+  type Props = MenuCheckboxItemProps;
+  type State = MenuState;
+}
+//#endregion
+export { MenuCheckboxItem, MenuCheckboxItemProps };
+//# sourceMappingURL=menu-checkbox-item.d.ts.map

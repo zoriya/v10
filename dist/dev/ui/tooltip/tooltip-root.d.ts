@@ -1,0 +1,20 @@
+import { PositioningBoundary, TooltipChangeDetails } from "@videojs/core/dom";
+import { ReactNode } from "react";
+import { TooltipProps } from "@videojs/core";
+//#region src/ui/tooltip/tooltip-root.d.ts
+interface TooltipRootProps extends TooltipProps {
+  /** Boundary used to constrain the popup size. */
+  boundary?: PositioningBoundary;
+  /** Called when the tooltip open state changes (fires immediately, before animations). */
+  onOpenChange?: (open: boolean, details: TooltipChangeDetails) => void;
+  /** Called after open/close animations complete. */
+  onOpenChangeComplete?: (open: boolean) => void;
+  children?: ReactNode;
+}
+declare function TooltipRoot({ open: controlledOpen, defaultOpen, onOpenChange: onOpenChangeProp, onOpenChangeComplete: onOpenChangeCompleteProp, delay, closeDelay, disableHoverablePopup, disabled, boundary, children, ...coreProps }: TooltipRootProps): ReactNode;
+declare namespace TooltipRoot {
+  type Props = TooltipRootProps;
+}
+//#endregion
+export { TooltipRoot, TooltipRootProps };
+//# sourceMappingURL=tooltip-root.d.ts.map

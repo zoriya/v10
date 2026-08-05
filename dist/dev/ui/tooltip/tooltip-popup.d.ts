@@ -1,0 +1,13 @@
+import { UIComponentProps } from "../../utils/types.js";
+import { TooltipState } from "@videojs/core";
+//#region src/ui/tooltip/tooltip-popup.d.ts
+interface TooltipPopupProps extends UIComponentProps<'div', TooltipState> {}
+/** Container for the tooltip content. Positioned relative to the trigger using CSS anchor positioning with a JavaScript fallback. */
+declare const TooltipPopup: import("react").ForwardRefExoticComponent<Omit<TooltipPopupProps, "ref"> & import("react").RefAttributes<HTMLDivElement>>;
+declare namespace TooltipPopup {
+  type Props = TooltipPopupProps;
+  type State = TooltipState;
+}
+//#endregion
+export { TooltipPopup, TooltipPopupProps };
+//# sourceMappingURL=tooltip-popup.d.ts.map

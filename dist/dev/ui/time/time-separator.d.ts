@@ -1,0 +1,24 @@
+import { UIComponentProps } from "../../utils/types.js";
+import { ReactNode } from "react";
+//#region src/ui/time/time-separator.d.ts
+type SeparatorState = Record<string, never>;
+interface SeparatorProps extends UIComponentProps<'span', SeparatorState> {
+  /** Separator content. Defaults to "/". */
+  children?: ReactNode | undefined;
+}
+/**
+ * Divider between time values. Hidden from screen readers.
+ *
+ * @example
+ * ```tsx
+ * <Time.Separator />
+ * <Time.Separator> of </Time.Separator>
+ * ```
+ */
+declare const Separator: import("react").ForwardRefExoticComponent<Omit<SeparatorProps, "ref"> & import("react").RefAttributes<HTMLSpanElement>>;
+declare namespace Separator {
+  type Props = SeparatorProps;
+}
+//#endregion
+export { Separator, SeparatorProps };
+//# sourceMappingURL=time-separator.d.ts.map

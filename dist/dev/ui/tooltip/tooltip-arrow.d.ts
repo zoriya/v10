@@ -1,0 +1,13 @@
+import { UIComponentProps } from "../../utils/types.js";
+import { TooltipState } from "@videojs/core";
+//#region src/ui/tooltip/tooltip-arrow.d.ts
+interface TooltipArrowProps extends UIComponentProps<'div', TooltipState> {}
+/** Decorative arrow pointing from the tooltip toward the trigger. Hidden from assistive technology. */
+declare const TooltipArrow: import("react").ForwardRefExoticComponent<TooltipArrowProps>;
+declare namespace TooltipArrow {
+  type Props = TooltipArrowProps;
+  type State = TooltipState;
+}
+//#endregion
+export { TooltipArrow, TooltipArrowProps };
+//# sourceMappingURL=tooltip-arrow.d.ts.map

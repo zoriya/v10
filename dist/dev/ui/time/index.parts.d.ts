@@ -1,0 +1,9 @@
+import { Group, GroupProps } from "./time-group.js";
+import { Separator, SeparatorProps } from "./time-separator.js";
+import { Value, ValueProps } from "./time-value.js";
+declare namespace index_parts_d_exports {
+  export { Group, GroupProps, Separator, SeparatorProps, Value, ValueProps };
+}
+//#endregion
+export { Group, type GroupProps, Separator, type SeparatorProps, Value, type ValueProps, index_parts_d_exports };
+//# sourceMappingURL=index.parts.d.ts.map

@@ -1,0 +1,1932 @@
+.media-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  white-space: nowrap;
+  border: 0;
+  clip: rect(0, 0, 0, 0);
+}
+
+
+/* ==========================================================================
+   Reset
+   ========================================================================== */
+
+.media-minimal-skin *,
+.media-minimal-skin *::before,
+.media-minimal-skin *::after {
+  box-sizing: border-box;
+}
+.media-minimal-skin img,
+.media-minimal-skin video,
+.media-minimal-skin svg {
+  display: block;
+  max-width: 100%;
+}
+.media-minimal-skin button {
+  font: inherit;
+}
+.media-minimal-skin [hidden][hidden] {
+  /* Keep authored templates hidden even when component classes set display. */
+  display: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .media-minimal-skin {
+    interpolate-size: allow-keywords;
+  }
+}
+
+/* ==========================================================================
+   Root Container
+   ========================================================================== */
+
+.media-minimal-skin {
+  /* Colors */
+  --media-current-shadow-color: oklch(from currentColor 0 0 0 / clamp(0, calc((l - 0.5) * 0.5), 0.15));
+  --media-current-shadow-color-subtle: oklch(from var(--media-current-shadow-color) l c h / calc(alpha * 0.4));
+  --scrollbar-thumb-color: oklch(from currentColor l c h / 0.3);
+  /* Scaling (used in video fullscreen) */
+  --scale: 1;
+  /* What value and unit to use - 1rem assumes the document font size remains at the default 16px */
+  --base-size: 1rem;
+  --size: calc(var(--base-size) * var(--scale));
+  /* Create a Tailwind-like spacing unit. */
+  --spacing: calc(var(--size) / 4);
+  --font-size-medium: calc(0.9375 * var(--size)); /* 15px */
+  --font-size-base: calc(0.8125 * var(--size)); /* 13px */
+  --font-size-small: calc(0.6875 * var(--size)); /* 11px */
+  --font-size-tiny: calc(0.5625 * var(--size)); /* 9px */
+  --media-icon-size: calc(1.125 * var(--size)); /* 18px */
+
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  container: media-root / inline-size;
+  font-family:
+    Inter Variable,
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    sans-serif;
+  font-size: var(--font-size-base);
+  -webkit-font-smoothing: auto;
+  -moz-osx-font-smoothing: auto;
+  line-height: 1.5;
+  letter-spacing: normal;
+  outline: 2px solid transparent;
+  outline-offset: -4px;
+  scrollbar-color: var(--scrollbar-thumb-color) transparent;
+  scrollbar-width: thin;
+  border-radius: var(--media-border-radius, 0.75rem);
+  isolation: isolate;
+  transition-timing-function: ease-out;
+  transition-duration: 100ms;
+  transition-property: outline-offset, outline-color;
+
+  &:focus-visible {
+    outline-color: currentColor;
+    outline-offset: 2px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb-color);
+    border-radius: 9999px;
+  }
+
+  @media (prefers-reduced-transparency: reduce) or (prefers-contrast: more) {
+    --scrollbar-thumb-color: oklch(from currentColor l c h / 0.8);
+    scrollbar-width: auto;
+  }
+}
+
+/* ==========================================================================
+   Media Element
+   ========================================================================== */
+
+.media-minimal-skin ::slotted(video),
+.media-minimal-skin video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: var(--media-object-fit, contain);
+  object-position: var(--media-object-position, center);
+}
+.media-minimal-skin ::slotted(video) {
+  border-radius: var(--media-video-border-radius);
+}
+.media-minimal-skin video {
+  border-radius: inherit;
+}
+
+.media-minimal-skin:fullscreen ::slotted(video),
+.media-minimal-skin:fullscreen video {
+  object-fit: contain;
+}
+
+/* ==========================================================================
+   Overlay / Scrim
+   ========================================================================== */
+
+.media-minimal-skin .media-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: linear-gradient(
+    to top,
+    oklch(0 0 0 / 0.7),
+    oklch(0 0 0 / 0.5) calc(var(--spacing) * 30),
+    oklch(0 0 0 / 0)
+  );
+  border-radius: inherit;
+  opacity: 0;
+  backdrop-filter: blur(0) saturate(1);
+  transition-timing-function: ease-out;
+  transition-duration: var(--media-controls-transition-duration);
+  transition-property: opacity, backdrop-filter;
+}
+
+.media-minimal-skin .media-error ~ .media-overlay {
+  transition-delay: var(--media-error-dialog-transition-delay);
+  transition-duration: var(--media-error-dialog-transition-duration);
+}
+
+.media-minimal-skin .media-controls[data-visible] ~ .media-overlay,
+.media-minimal-skin .media-error[data-open] ~ .media-overlay {
+  opacity: 1;
+}
+
+.media-minimal-skin .media-buffering-indicator[data-visible] ~ .media-overlay {
+  background: oklch(0 0 0 / 0.35);
+  opacity: 1;
+  backdrop-filter: blur(8px);
+}
+
+.media-minimal-skin .media-error[data-open] ~ .media-overlay {
+  backdrop-filter: blur(16px) saturate(1.2);
+}
+
+/* ==========================================================================
+   Buffering Indicator
+   ========================================================================== */
+
+.media-minimal-skin .media-buffering-indicator {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: none;
+  place-content: center;
+  color: oklch(1 0 0);
+  pointer-events: none;
+
+  &:not([data-visible]) {
+    --media-spinner-animation: none;
+  }
+
+  &[data-visible] {
+    display: grid;
+  }
+}
+
+/* ==========================================================================
+   Error Dialog
+   ========================================================================== */
+
+.media-minimal-skin .media-error:not([data-open]) {
+  display: none;
+}
+
+.media-minimal-skin .media-error__title {
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.media-minimal-skin .media-error__description {
+  overflow-wrap: anywhere;
+  opacity: 0.7;
+}
+
+.media-minimal-skin .media-error__actions {
+  display: flex;
+  gap: calc(var(--spacing) * 2);
+
+  & > * {
+    flex: 1;
+  }
+}
+
+.media-minimal-skin .media-error[data-open] ~ .media-controls * {
+  visibility: hidden;
+}
+
+/* ==========================================================================
+   Controls
+   ========================================================================== */
+
+.media-minimal-skin .media-controls {
+  --media-popover-side-offset: calc(var(--spacing) * (var(--base-side-offset, 2) + 1));
+  --media-tooltip-side-offset: var(--media-popover-side-offset);
+  --media-popover-boundary-offset: calc(var(--spacing) * (var(--base-boundary-offset, 0) + 1));
+  --media-tooltip-boundary-offset: var(--media-popover-boundary-offset);
+
+  display: flex;
+  align-items: center;
+  padding: calc(var(--spacing) * 1);
+  container: media-controls / inline-size;
+  text-shadow: 0 1px 0 var(--media-current-shadow-color);
+  background-color: var(--media-controls-background-color);
+  backdrop-filter: var(--media-controls-backdrop-filter);
+}
+
+/* ==========================================================================
+   Time Controls & Display
+   ========================================================================== */
+
+.media-minimal-skin .media-time-controls {
+  display: flex;
+  flex: 1;
+  flex-direction: row-reverse;
+  gap: calc(var(--spacing) * 3);
+  align-items: center;
+  container: media-time-controls / inline-size;
+}
+
+.media-minimal-skin .media-time-group {
+  display: flex;
+  gap: calc(var(--spacing) * 1);
+  align-items: center;
+}
+
+.media-minimal-skin .media-time {
+  font-variant-numeric: tabular-nums;
+}
+
+.media-minimal-skin .media-time[role="button"] {
+  cursor: pointer;
+  outline: 2px solid transparent;
+  outline-offset: -2px;
+  border-radius: calc(var(--spacing) * 1);
+  transition-timing-function: ease-out;
+  transition-duration: 100ms;
+  transition-property: outline-color, outline-offset;
+
+  @supports (corner-shape: squircle) {
+    border-radius: calc(var(--spacing) * 4);
+    corner-shape: squircle;
+  }
+
+  &:focus-visible {
+    outline-color: currentColor;
+    outline-offset: 2px;
+  }
+}
+
+.media-minimal-skin .media-time--current,
+.media-minimal-skin .media-time-separator {
+  display: none;
+}
+
+@container media-root (width > 42rem) {
+  .media-minimal-skin .media-time-controls {
+    flex-direction: row;
+  }
+
+  .media-minimal-skin .media-time--duration,
+  .media-minimal-skin .media-time-separator {
+    color: oklch(from currentColor l c h / 0.6);
+  }
+
+  .media-minimal-skin .media-time--current,
+  .media-minimal-skin .media-time-separator {
+    display: inline;
+  }
+}
+
+/* ==========================================================================
+   Buttons
+   ========================================================================== */
+
+/* Base button */
+.media-minimal-skin .media-button {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  height: calc(var(--spacing) * 9.5);
+  min-height: 0;
+  padding: calc(var(--spacing) * 2) calc(var(--spacing) * 4);
+  text-align: center;
+  touch-action: manipulation;
+  cursor: pointer;
+  user-select: none;
+  outline: 2px solid transparent;
+  outline-offset: -2px;
+  border: none;
+  border-radius: calc(var(--spacing) * 2);
+  transition-timing-function: ease-out;
+  transition-duration: 150ms;
+  transition-property: background-color, outline-offset, scale;
+  /* Fix weird jumping when clicking on the buttons in Safari. */
+  will-change: scale;
+
+  &:focus-visible {
+    outline-color: currentColor;
+    outline-offset: 2px;
+  }
+
+  &:active:not([aria-disabled="true"]) {
+    scale: 0.98;
+  }
+
+  &[aria-disabled="true"] {
+    cursor: not-allowed;
+    opacity: 0.5;
+    filter: grayscale(1);
+  }
+}
+
+@supports (corner-shape: squircle) {
+  .media-minimal-skin .media-button {
+    border-radius: calc(var(--spacing) * 4);
+    corner-shape: squircle;
+  }
+}
+
+/* Primary button variant */
+.media-minimal-skin .media-button--primary {
+  font-weight: 500;
+  color: oklch(0 0 0);
+  text-shadow: none;
+  background: oklch(1 0 0);
+}
+
+/* Subtle button variant */
+.media-minimal-skin .media-button--subtle {
+  color: inherit;
+  text-shadow: inherit;
+  background: transparent;
+
+  &:hover,
+  &:focus-visible,
+  &[aria-expanded="true"] {
+    background: oklch(from currentColor l c h / 0.1);
+  }
+}
+
+/* Icon button variant */
+.media-minimal-skin .media-button--icon {
+  display: grid;
+  aspect-ratio: 1;
+  padding: 0;
+
+  &:active:not([aria-disabled="true"]) {
+    scale: 0.9;
+  }
+
+  & .media-icon__container {
+    display: grid;
+  }
+
+  & .media-icon {
+    grid-area: 1 / 1;
+    transition-behavior: allow-discrete;
+    transition-property: display, opacity;
+    transition-duration: 150ms;
+    transition-timing-function: ease-out;
+    filter: drop-shadow(0 1px 0 var(--media-current-shadow-color));
+  }
+}
+
+/* Seek button */
+.media-minimal-skin .media-button--seek {
+  & .media-icon__label {
+    position: absolute;
+    right: -1px;
+    bottom: -3px;
+    font-size: 0.715em; /* 10px */
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.05em;
+  }
+
+  &:has(.media-icon--flipped) .media-icon__label {
+    right: unset;
+    left: -1px;
+  }
+}
+
+/* Playback rate button */
+.media-minimal-skin .media-button--playback-rate {
+  padding: 0;
+  font-variant-numeric: tabular-nums;
+
+  &::after {
+    width: 4ch;
+    content: attr(data-rate) "\00D7";
+  }
+
+  &[data-inline-rate-label]::after {
+    content: none;
+  }
+}
+
+/* Settings button */
+.media-minimal-skin .media-button--settings {
+  & .media-icon--settings {
+    transition: transform 150ms ease-in-out;
+
+    @media (prefers-reduced-motion: reduce) {
+      transition-duration: 0ms;
+    }
+  }
+
+  &[aria-expanded="true"] .media-icon--settings {
+    transform: rotate(90deg);
+  }
+}
+
+/* Live button — wide pill button with a status dot (gray → red at the live
+   edge) rendered via ::before, and "LIVE" text rendered as the button's own
+   text content. */
+.media-minimal-skin .media-button--live {
+  display: inline-flex;
+  gap: calc(var(--spacing) * 1.5);
+  align-items: center;
+  width: auto;
+  aspect-ratio: auto;
+  padding: calc(var(--spacing) * 2) calc(var(--spacing) * 3);
+  font-size: var(--font-size-small);
+  font-weight: 600;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+
+  &::before {
+    display: inline-block;
+    flex-shrink: 0;
+    width: calc(var(--spacing) * 2);
+    height: calc(var(--spacing) * 2);
+    content: "";
+    background-color: oklch(from currentColor l c h / 0.4);
+    border-radius: 50%;
+    transition: background-color 150ms ease-out;
+  }
+
+  &[data-live-edge]::before {
+    background-color: oklch(0.65 0.22 27);
+  }
+}
+
+/* ==========================================================================
+   Button Groups
+   ========================================================================== */
+
+.media-minimal-skin .media-button-group {
+  display: flex;
+  gap: 1px;
+  align-items: center;
+}
+
+/* ==========================================================================
+   Badge
+   ========================================================================== */
+
+.media-minimal-skin .media-badge {
+  padding: calc(var(--spacing) * 1) calc(var(--spacing) * 1.5);
+  font-size: var(--font-size-small);
+  font-weight: 500;
+  line-height: 1;
+  color: oklch(from currentColor l c h / 0.85);
+  white-space: nowrap;
+  background-color: oklch(from currentColor l c h / 0.1);
+  border-radius: calc(var(--spacing) * 1);
+}
+
+/* ==========================================================================
+   Icons
+   ========================================================================== */
+
+.media-minimal-skin .media-icon__container {
+  position: relative;
+}
+
+.media-minimal-skin .media-icon {
+  flex-shrink: 0;
+  width: var(--media-icon-size);
+  height: var(--media-icon-size);
+}
+.media-minimal-skin .media-icon--flipped {
+  scale: -1 1;
+}
+
+/* ==========================================================================
+   Poster Image
+   ========================================================================== */
+
+.media-minimal-skin media-poster,
+.media-minimal-skin > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  transition: opacity 0.25s;
+}
+.media-minimal-skin media-poster:not([data-visible]),
+.media-minimal-skin > img:not([data-visible]),
+.media-minimal-skin > img[data-visible]:not([data-loaded]) {
+  opacity: 0;
+}
+.media-minimal-skin media-poster ::slotted(img),
+.media-minimal-skin media-poster img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: var(--media-object-fit, contain);
+  object-position: var(--media-object-position, center);
+  border-radius: var(--media-video-border-radius);
+}
+.media-minimal-skin > img {
+  object-fit: var(--media-object-fit, contain);
+  object-position: var(--media-object-position, center);
+  border-radius: inherit;
+}
+
+/* Blurred placeholder: HTML path targets media-poster::before, React path targets the skin container::before */
+.media-minimal-skin media-poster::before,
+.media-minimal-skin::before {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  content: "";
+  background-image: var(--media-poster-placeholder, none);
+  background-repeat: no-repeat;
+  background-position: var(--media-object-position, center);
+  background-size: var(--media-object-fit, contain);
+  filter: blur(var(--media-poster-placeholder-blur, 20px));
+}
+
+/* React path: hidden by default, transitions in while poster loads */
+.media-minimal-skin::before {
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+/* Show placeholder while the poster is visible but not yet loaded */
+.media-minimal-skin:has(img[data-visible]:not([data-loaded]))::before {
+  opacity: 1;
+}
+
+.media-minimal-skin:fullscreen media-poster ::slotted(img),
+.media-minimal-skin:fullscreen media-poster img,
+.media-minimal-skin:fullscreen > img {
+  object-fit: contain;
+}
+
+/* ==========================================================================
+   Media thumbnail
+   ========================================================================== */
+
+.media-minimal-skin .media-thumbnail {
+  pointer-events: none;
+
+  & .media-thumbnail__image-wrapper {
+    position: relative;
+    background-color: oklch(0 0 0 / 0.9);
+    border-radius: calc(var(--spacing) * 2);
+  }
+  & .media-thumbnail__image {
+    display: block;
+    border-radius: inherit;
+  }
+
+  & .media-thumbnail__time {
+    display: block;
+    margin-top: calc(var(--spacing) * 2);
+    text-align: center;
+  }
+
+  & .media-overlay {
+    opacity: 1;
+  }
+
+  & .media-thumbnail__spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    opacity: 0;
+    translate: -50% -50%;
+  }
+
+  & .media-thumbnail__image,
+  & .media-thumbnail__spinner {
+    transition: opacity 150ms ease-out;
+  }
+
+  &:not(:has(.media-thumbnail__image[data-loading])) {
+    & .media-thumbnail__spinner {
+      --media-spinner-animation: none;
+    }
+  }
+
+  &:has(.media-thumbnail__image[data-loading]) {
+    & .media-thumbnail__image {
+      opacity: 0;
+    }
+    & .media-thumbnail__spinner {
+      opacity: 1;
+    }
+  }
+}
+
+/* ==========================================================================
+   Slider
+   ========================================================================== */
+
+.media-minimal-skin .media-slider {
+  position: relative;
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  outline: none;
+  border-radius: calc(Infinity * 1px);
+
+  &[data-orientation="horizontal"] {
+    width: var(--slider-width, 100%);
+    min-width: calc(var(--spacing) * 20);
+    height: var(--slider-height, calc(var(--spacing) * 8));
+  }
+  &[data-orientation="vertical"] {
+    width: var(--slider-width, calc(var(--spacing) * 8));
+    height: var(--slider-height, calc(var(--spacing) * 20));
+  }
+
+  /* Track */
+  & .media-slider__track {
+    position: relative;
+    overflow: hidden;
+    user-select: none;
+    background-color: oklch(from currentColor l c h / 0.2);
+    border-radius: inherit;
+    isolation: isolate;
+
+    &[data-orientation="horizontal"] {
+      width: 100%;
+      height: calc(var(--spacing) * 0.75);
+    }
+    &[data-orientation="vertical"] {
+      width: calc(var(--spacing) * 0.75);
+      height: 100%;
+    }
+  }
+
+  /* Thumb */
+  & .media-slider__thumb {
+    position: absolute;
+    z-index: 10;
+    width: calc(var(--spacing) * 3);
+    height: calc(var(--spacing) * 3);
+    user-select: none;
+    outline: 2px solid transparent;
+    outline-offset: -2px;
+    background-color: currentColor;
+    border-radius: calc(Infinity * 1px);
+    box-shadow:
+      0 0 0 1px var(--media-current-shadow-color, oklch(0 0 0 / 0.15)),
+      0 1px 3px 0 oklch(0 0 0 / 0.15),
+      0 1px 2px -1px oklch(0 0 0 / 0.15);
+    opacity: 0;
+    transform-origin: center;
+    scale: 0.7;
+    translate: -50% -50%;
+    transition-timing-function: ease-out;
+    transition-duration: 150ms;
+    transition-property: opacity, scale, outline-offset;
+
+    &[data-orientation="horizontal"] {
+      top: 50%;
+      left: var(--media-slider-fill);
+    }
+    &[data-orientation="vertical"] {
+      top: calc(100% - var(--media-slider-fill));
+      left: 50%;
+    }
+
+    &:focus-visible {
+      outline-color: currentColor;
+      outline-offset: 2px;
+    }
+  }
+
+  &:hover .media-slider__thumb,
+  &:focus-within .media-slider__thumb,
+  & .media-slider__thumb--persistent {
+    opacity: 1;
+    scale: 1;
+  }
+
+  /* Preview */
+  & .media-slider__preview {
+    & .media-slider__value,
+    &::before {
+      opacity: 0;
+      scale: 0.5;
+      transition-timing-function: ease-out;
+      transition-duration: 200ms;
+      transition-property: opacity, scale;
+    }
+
+    & .media-slider__value {
+      position: absolute;
+      bottom: calc(var(--spacing) * 6);
+      text-shadow: 0 1px 0 var(--media-current-shadow-color);
+      filter: blur(8px);
+      translate: -50% calc(var(--spacing) * 2);
+      transition-property: filter, opacity, scale, translate;
+    }
+
+    &::before {
+      display: block;
+      content: "";
+      background-color: oklch(from currentColor l c h / 0.35);
+    }
+
+    &[data-pointing] .media-slider__value,
+    &[data-pointing]:not([data-dragging])::before {
+      opacity: 1;
+      scale: 1;
+    }
+    &[data-pointing] .media-slider__value {
+      filter: blur(0);
+      translate: -50% 0;
+    }
+
+    &[data-orientation="horizontal"]::before {
+      min-width: 1px;
+      height: calc(var(--spacing) * 5);
+    }
+    &[data-orientation="vertical"]::before {
+      width: calc(var(--spacing) * 5);
+      min-height: 1px;
+    }
+  }
+
+  /* Shared track fills */
+  & .media-slider__buffer,
+  & .media-slider__fill {
+    position: absolute;
+    pointer-events: none;
+    border-radius: inherit;
+
+    &[data-orientation="horizontal"] {
+      inset-block: 0;
+      left: 0;
+    }
+    &[data-orientation="vertical"] {
+      inset-inline: 0;
+      bottom: 0;
+    }
+  }
+
+  /* Buffer */
+  & .media-slider__buffer {
+    background-color: oklch(from currentColor l c h / 0.2);
+    transition-timing-function: ease-out;
+    transition-duration: 0.25s;
+
+    &[data-orientation="horizontal"] {
+      width: var(--media-slider-buffer);
+      transition-property: width;
+    }
+    &[data-orientation="vertical"] {
+      height: var(--media-slider-buffer);
+      transition-property: height;
+    }
+  }
+
+  /* Fill */
+  & .media-slider__fill {
+    background-color: currentColor;
+
+    &[data-orientation="horizontal"] {
+      width: var(--media-slider-fill);
+    }
+    &[data-orientation="vertical"] {
+      height: var(--media-slider-fill);
+    }
+  }
+
+  /* Dragging — thumb and fill follow the pointer position */
+  &[data-dragging] {
+    & .media-slider__thumb[data-orientation="horizontal"] {
+      left: var(--media-slider-pointer);
+    }
+    & .media-slider__thumb[data-orientation="vertical"] {
+      top: calc(100% - var(--media-slider-pointer));
+    }
+    & .media-slider__fill[data-orientation="horizontal"] {
+      width: var(--media-slider-pointer);
+    }
+    & .media-slider__fill[data-orientation="vertical"] {
+      height: var(--media-slider-pointer);
+    }
+  }
+}
+
+/* ==========================================================================
+   Popups & Animations
+   ========================================================================== */
+
+.media-minimal-skin {
+  --media-popup-transition:
+    opacity var(--media-popup-transition-timing-function) var(--media-popup-transition-duration),
+    filter var(--media-popup-transition-timing-function) var(--media-popup-transition-duration),
+    transform var(--media-popup-transition-timing-function) var(--media-popup-transition-duration),
+    scale var(--media-popup-transition-timing-function) var(--media-popup-transition-duration);
+}
+
+.media-minimal-skin .media-popover,
+.media-minimal-skin .media-tooltip {
+  --popup-translate-distance: calc(var(--spacing) * 2);
+  margin: 0;
+  overflow: visible;
+  color: inherit;
+  border: 0;
+  transition: var(--media-popup-transition);
+
+  &[data-starting-style],
+  &[data-ending-style] {
+    opacity: 0;
+    /* We have to use transform here for translate as the translate property is used for positioning by core. */
+    transform: translate(var(--popup-translate-x-distance, 0), var(--popup-translate-y-distance, 0));
+    scale: 0.95;
+  }
+
+  &[data-ending-style] {
+    filter: blur(4px);
+    transform: none;
+    /* Speed up the exit transition. */
+    transition-duration: max(0ms, calc(var(--media-popup-transition-duration) - 50ms));
+  }
+
+  &[data-side="top"] {
+    --popup-translate-y-distance: var(--popup-translate-distance);
+    transform-origin: bottom;
+  }
+  &[data-side="bottom"] {
+    --popup-translate-y-distance: calc(var(--popup-translate-distance) * -1);
+    transform-origin: top;
+  }
+  &[data-side="left"] {
+    --popup-translate-x-distance: var(--popup-translate-distance);
+    transform-origin: right;
+  }
+  &[data-side="right"] {
+    --popup-translate-x-distance: calc(var(--popup-translate-distance) * -1);
+    transform-origin: left;
+  }
+
+  /* Safe area between trigger and popup */
+  &::before {
+    position: absolute;
+    pointer-events: inherit;
+    content: "";
+  }
+
+  &[data-side="top"]::before,
+  &[data-side="bottom"]::before {
+    inset-inline: 0;
+    width: 100%;
+  }
+  &[data-side="top"]::before {
+    top: 100%;
+  }
+  &[data-side="bottom"]::before {
+    bottom: 100%;
+  }
+
+  &[data-side="left"]::before,
+  &[data-side="right"]::before {
+    inset-block: 0;
+    height: 100%;
+  }
+  &[data-side="left"]::before {
+    left: 100%;
+  }
+  &[data-side="right"]::before {
+    right: 100%;
+  }
+}
+
+.media-minimal-skin .media-popover {
+  &[data-side="top"]::before,
+  &[data-side="bottom"]::before {
+    height: var(--media-popover-side-offset);
+  }
+  &[data-side="left"]::before,
+  &[data-side="right"]::before {
+    width: var(--media-popover-side-offset);
+  }
+}
+
+.media-minimal-skin .media-tooltip {
+  padding: calc(var(--spacing) * 1) calc(var(--spacing) * 2);
+  font-size: var(--font-size-base);
+  color: var(--media-tooltip-text-color);
+  white-space: nowrap;
+  background-color: var(--media-tooltip-background-color);
+  border-radius: calc(var(--spacing) * 2);
+  box-shadow:
+    0 0 0 1px var(--media-tooltip-border-color),
+    0 4px 6px -1px oklch(0 0 0 / 0.2),
+    0 2px 4px -2px oklch(0 0 0 / 0.2);
+  backdrop-filter: var(--media-tooltip-backdrop-filter);
+
+  /* `display: flex` must not apply while closed — it overrides UA `[popover]` hiding. */
+  &[data-open] {
+    display: flex;
+    column-gap: calc(var(--spacing) * 1);
+    align-items: center;
+  }
+
+  &[data-side="top"]::before,
+  &[data-side="bottom"]::before {
+    height: var(--media-tooltip-side-offset);
+  }
+  &[data-side="left"]::before,
+  &[data-side="right"]::before {
+    width: var(--media-tooltip-side-offset);
+  }
+
+  & .media-tooltip__kbd {
+    min-width: 1.5em;
+    padding: 0.1em;
+    margin-right: calc(var(--spacing) * -1);
+    font-family: inherit;
+    font-size: var(--font-size-small);
+    font-weight: 600;
+    line-height: 1.25;
+    text-align: center;
+    background-color: oklch(from currentColor l c h / 0.15);
+    border-radius: calc(var(--spacing) * 1);
+  }
+}
+
+.media-minimal-skin .media-popover--volume:has(media-volume-slider[data-availability="unsupported"]) {
+  display: none;
+}
+
+/* ==========================================================================
+   Menus
+   Note: Menus use `.media-popover` styles for positioning and transitions.
+   ========================================================================== */
+
+.media-minimal-skin .media-menu {
+  --menu-transition-duration: 250ms;
+  --menu-max-height: calc(var(--spacing) * 56);
+  --menu-padding: calc(var(--spacing) * 1);
+  --menu-border-radius: calc(var(--spacing) * 2.5);
+  --menu-item-border-radius: calc(var(--menu-border-radius) - var(--menu-padding));
+  box-sizing: border-box;
+  min-width: max-content;
+  max-width: var(--media-popover-available-width, none);
+  max-height: min(var(--media-popover-available-height, var(--menu-max-height)), var(--menu-max-height));
+  padding: var(--menu-padding);
+  overflow: auto;
+  overscroll-behavior: none;
+  background-color: var(--media-popover-background-color);
+  border-radius: var(--menu-border-radius);
+  box-shadow:
+    0 0 0 1px var(--media-popover-border-color),
+    0 4px 6px -1px oklch(0 0 0 / 0.1),
+    0 2px 4px -2px oklch(0 0 0 / 0.1);
+  backdrop-filter: var(--media-popover-backdrop-filter);
+
+  @media (prefers-reduced-motion: reduce) {
+    --menu-transition-duration: 0ms;
+  }
+
+  & .media-menu__panel {
+    position: absolute;
+    inset: 0;
+    padding: var(--menu-padding);
+    overflow: auto;
+    overscroll-behavior: none;
+    outline: none;
+    translate: 0 0;
+    transition-timing-function: ease-in-out;
+    transition-duration: var(--menu-transition-duration);
+    transition-property: translate, filter;
+    will-change: translate, filter;
+
+    &[data-starting-style],
+    &[data-ending-style] {
+      overflow: hidden;
+    }
+
+    /* Root settings view — slides out when a submenu is active */
+    &[data-menu-root-view][data-menu-view-state="inactive"] {
+      filter: blur(8px);
+      translate: -100% 0;
+
+      /* Hide the indicator while transitioning */
+      & .media-menu__group::before {
+        display: none;
+      }
+    }
+
+    /* Submenu panels — slide in/out alongside the root view */
+    &[data-submenu] {
+      z-index: 10;
+
+      &:not([data-open], [data-ending-style]) {
+        translate: -100% 0;
+        transition-property: none;
+      }
+
+      &[data-starting-style],
+      &[data-ending-style] {
+        pointer-events: none;
+        filter: blur(8px);
+      }
+
+      &[data-starting-style][data-direction="forward"],
+      &[data-ending-style][data-direction="back"] {
+        translate: 100% 0;
+      }
+
+      &[data-ending-style][data-direction="forward"],
+      &[data-starting-style][data-direction="back"] {
+        translate: -100% 0;
+      }
+    }
+  }
+
+  & .media-menu__separator {
+    margin: calc(var(--spacing) * 1) 0;
+    border-bottom: 1px solid oklch(1 0 0 / 0.1);
+  }
+
+  & .media-menu__group {
+    anchor-scope: --media-menu-item-highlight-anchor;
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--spacing) * 0.5);
+
+    @supports (top: anchor(top)) {
+      &::before {
+        position: absolute;
+        position-anchor: --media-menu-item-highlight-anchor;
+        inset: anchor(inside);
+        pointer-events: none;
+        content: "";
+        background-color: oklch(from currentColor l c h / 0.1);
+        border-radius: var(--menu-item-border-radius);
+        transition: inset ease-in-out 100ms;
+      }
+    }
+  }
+
+  & .media-menu__item,
+  & .media-menu__back {
+    display: flex;
+    gap: calc(var(--spacing) * 1.5);
+    align-items: center;
+    padding: calc(var(--spacing) * 1.5) calc(var(--spacing) * 2);
+    text-align: left;
+    text-shadow: 0 1px 0 var(--media-current-shadow-color);
+    cursor: pointer;
+    user-select: none;
+    outline: 2px solid transparent;
+    outline-offset: -2px;
+    border-radius: var(--menu-item-border-radius);
+    transition: background-color, color;
+    transition-timing-function: ease-out;
+    transition-duration: 100ms;
+
+    &:focus-visible {
+      outline-color: currentColor;
+      outline-offset: 2px;
+    }
+
+    &:hover,
+    &[data-highlighted] {
+      background-color: oklch(from currentColor l c h / 0.1);
+    }
+
+    & .media-icon {
+      flex-shrink: 0;
+      color: oklch(from currentColor l c h / 0.5);
+      filter: drop-shadow(0 1px 0 var(--media-current-shadow-color));
+    }
+  }
+
+  & .media-menu__indicator {
+    flex-shrink: 0;
+    margin-right: calc(var(--spacing) * -1);
+    margin-left: auto;
+    opacity: 0;
+  }
+
+  & .media-menu__item {
+    justify-content: space-between;
+    font-variant-numeric: tabular-nums;
+    color: inherit;
+
+    &[aria-disabled="true"] {
+      pointer-events: none;
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+
+    &[aria-checked="true"] .media-menu__indicator {
+      opacity: 1;
+    }
+
+    &[data-availability="unavailable"],
+    &[data-availability="unsupported"] {
+      display: none;
+    }
+
+    &:hover,
+    &[data-highlighted] {
+      @supports (top: anchor(top)) {
+        anchor-name: --media-menu-item-highlight-anchor;
+        background-color: transparent;
+      }
+    }
+  }
+
+  & .media-menu__tier {
+    padding-top: 1px;
+    padding-left: calc(var(--spacing) * 0.5);
+    font-size: var(--font-size-tiny);
+    font-weight: 600;
+    line-height: 1;
+    color: oklch(from currentColor l c h / 0.7);
+  }
+
+  & .media-menu__back {
+    width: 100%;
+    margin-bottom: calc(var(--spacing) * 0.5);
+  }
+
+  & .media-menu__hint {
+    display: inline-flex;
+    gap: calc(var(--spacing) * 1);
+    align-items: center;
+    min-width: 0;
+    padding-left: calc(var(--spacing) * 2);
+    margin-left: auto;
+    color: oklch(from currentColor l c h / 0.65);
+  }
+
+  & .media-menu__hint-label {
+    max-width: calc(var(--spacing) * 24);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  & .media-menu__chevron {
+    width: calc(var(--spacing) * 3.5);
+    height: calc(var(--spacing) * 3.5);
+  }
+
+  /* Settings menu */
+  &.media-menu--settings {
+    width: var(--media-menu-width);
+    min-width: calc(var(--spacing) * 48);
+    height: var(--media-menu-height);
+    overflow: hidden;
+    /* Add height and width transitions. */
+    transition:
+      var(--media-popup-transition),
+      height var(--media-popup-transition-timing-function) var(--menu-transition-duration),
+      width var(--media-popup-transition-timing-function) var(--menu-transition-duration);
+
+    /* Don't transition width and height on open/close. */
+    &[data-starting-style],
+    &[data-ending-style] {
+      transition: var(--media-popup-transition);
+    }
+  }
+}
+
+/* ==========================================================================
+   Native Caption Track
+   ========================================================================== */
+
+.media-minimal-skin {
+  --media-caption-track-duration: var(--media-controls-transition-duration);
+  --media-caption-track-delay: 25ms;
+  --media-caption-track-y: calc(var(--spacing) * -2);
+
+  &:has(.media-controls[data-visible]) {
+    --media-caption-track-y: calc(var(--spacing) * -20);
+  }
+
+  @container media-root (width > 42rem) {
+    &:has(.media-controls[data-visible]) > * {
+      --media-caption-track-y: calc(var(--spacing) * -12);
+    }
+  }
+}
+
+.media-minimal-skin video::-webkit-media-text-track-container {
+  z-index: 1;
+  font-family: inherit;
+  scale: 0.98;
+  translate: 0 var(--media-caption-track-y);
+  transition: translate var(--media-caption-track-duration) ease-out;
+  transition-delay: var(--media-caption-track-delay);
+}
+
+/* ==========================================================================
+   Input Feedback
+   ========================================================================== */
+
+.media-minimal-skin .media-input-feedback {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  align-items: center;
+  justify-items: center;
+  overflow: hidden;
+  color: var(--media-color-primary, oklch(1 0 0));
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+/* --- Feedback islands ------------------------------------------------------- */
+
+.media-minimal-skin .media-input-feedback-island {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  padding-top: calc(var(--spacing) * 3);
+  padding-bottom: calc(var(--spacing) * 32);
+  color: inherit;
+  text-shadow: 0 1px 0 var(--media-current-shadow-color);
+  pointer-events: none;
+  background-image: linear-gradient(
+    to bottom,
+    oklch(0 0 0 / 0.35),
+    oklch(0 0 0 / 0.2) calc(var(--spacing) * 12),
+    oklch(0 0 0 / 0)
+  );
+  transform-origin: top center;
+  transition-timing-function: ease-out;
+  transition-duration: 100ms;
+
+  .media-input-feedback-island__content {
+    display: flex;
+    gap: calc(var(--spacing) * 2);
+    align-items: center;
+    justify-content: space-between;
+    padding: calc(var(--spacing) * 1) calc(var(--spacing) * 2.5);
+  }
+
+  .media-icon {
+    display: none;
+    flex-shrink: 0;
+    filter: drop-shadow(0 1px 0 var(--media-current-shadow-color));
+  }
+
+  .media-input-feedback-island__value {
+    margin-left: auto;
+  }
+
+  @media (pointer: fine) {
+    transition-property: translate, filter, opacity;
+    will-change: translate, filter, opacity;
+  }
+
+  @media (pointer: coarse) {
+    transition-property: translate, opacity;
+    will-change: translate, opacity;
+  }
+
+  @media (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    transition-property: translate, filter, opacity;
+  }
+
+  @media (prefers-reduced-transparency: reduce) or (prefers-contrast: more) {
+    .media-input-feedback-island__content {
+      background: var(--media-controls-background-color);
+      border-radius: calc(var(--spacing) * 2);
+    }
+  }
+
+  /* Default hidden state */
+  &[data-starting-style],
+  &[data-ending-style] {
+    opacity: 0;
+    transition-timing-function: ease-in;
+    transition-duration: 400ms;
+
+    @media (pointer: fine) and (prefers-reduced-motion: no-preference) {
+      filter: blur(8px);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      &[data-ending-style] {
+        translate: 0 -100%;
+      }
+    }
+  }
+}
+
+.media-minimal-skin .media-input-feedback-island--volume {
+  .media-input-feedback-island__content {
+    width: min(80%, calc(var(--spacing) * 56));
+  }
+
+  .media-input-feedback-island__progress {
+    --media-progress-fill: var(--media-volume-fill);
+    width: 100%;
+    height: calc(var(--spacing) * 0.75);
+    background-image: linear-gradient(
+      to right,
+      currentColor 0%,
+      currentColor var(--media-progress-fill),
+      oklch(from currentColor l c h / 0.2) var(--media-progress-fill),
+      oklch(from currentColor l c h / 0.2) 100%
+    );
+    border-radius: calc(Infinity * 1px);
+    box-shadow: 0 1px 0 var(--media-current-shadow-color-subtle);
+  }
+
+  &[data-level="high"] .media-icon--volume-high,
+  &[data-level="low"] .media-icon--volume-low,
+  &[data-level="off"] .media-icon--volume-off {
+    display: block;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    &[data-min] .media-input-feedback-island__content,
+    &[data-max] .media-input-feedback-island__content {
+      animation: media-shake 300ms ease-in-out;
+    }
+  }
+}
+
+.media-minimal-skin .media-input-feedback-island--status {
+  &[data-status="captions-on"] .media-icon--captions-on,
+  &[data-status="captions-off"] .media-icon--captions-off,
+  &[data-status="fullscreen"] .media-icon--fullscreen-enter,
+  &[data-status="exit-fullscreen"] .media-icon--fullscreen-exit,
+  &[data-status="pip"] .media-icon--pip-enter,
+  &[data-status="exit-pip"] .media-icon--pip-exit {
+    display: block;
+  }
+}
+
+/* --- Bubble ---------------------------------------------------------------- */
+
+.media-minimal-skin .media-input-feedback-bubble {
+  display: grid;
+  grid-row: 1;
+  grid-column: 2;
+  place-content: center;
+  padding: calc(var(--spacing) * 4);
+  text-align: center;
+
+  /* Central bubble (play, pause) */
+  &:not([data-direction]) {
+    transition-timing-function: ease-out;
+    transition-duration: 200ms;
+    transition-property: opacity, scale;
+
+    &[data-starting-style],
+    &[data-ending-style] {
+      opacity: 0;
+      scale: 0.85;
+    }
+
+    &[data-ending-style] {
+      transition-timing-function: ease-in;
+      transition-duration: 100ms;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      transition-duration: 50ms;
+      transition-property: opacity;
+    }
+  }
+
+  /* Directional bubbles (seek) */
+  &[data-direction] {
+    gap: calc(var(--spacing) * 1);
+
+    @container media-root (width > 24rem) {
+      padding: calc(var(--spacing) * 6);
+    }
+  }
+
+  &[data-direction="backward"] {
+    grid-column: 1;
+    justify-self: left;
+  }
+
+  &[data-direction="forward"] {
+    grid-column: 3;
+    justify-self: right;
+  }
+
+  /* Icons */
+  .media-icon {
+    display: none;
+    width: calc(var(--media-icon-size) * 2);
+    height: calc(var(--media-icon-size) * 2);
+  }
+
+  .media-icon--seek {
+    width: calc(var(--media-icon-size) * 1.5);
+    height: calc(var(--media-icon-size) * 1.5);
+  }
+
+  &[data-direction] .media-icon--seek,
+  &[data-status="pause"] .media-icon--pause,
+  &[data-status="play"] .media-icon--play {
+    display: block;
+  }
+
+  &[data-direction="backward"] .media-icon--seek {
+    scale: -1 1;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .media-icon--seek {
+      transition-timing-function: ease-in-out;
+      transition-duration: 200ms;
+      transition-property: translate, opacity;
+    }
+
+    &[data-starting-style] .media-icon--seek,
+    &[data-ending-style] .media-icon--seek {
+      opacity: 0;
+    }
+
+    &[data-direction="forward"][data-starting-style] .media-icon--seek {
+      translate: -60% 0;
+    }
+    &[data-direction="backward"][data-starting-style] .media-icon--seek {
+      translate: 60% 0;
+    }
+  }
+}
+
+/* ==========================================================================
+   Icon State Visibility for Video Skins
+
+   Data-attribute-driven visibility rules for multi-state icon buttons.
+   Uses :is() with both element selectors (for HTML custom element wrappers)
+   and class selectors (for React rendered SVG elements).
+   ========================================================================== */
+
+/* --- All icons hidden by default --- */
+
+.media-button--play .media-icon--restart,
+.media-button--play .media-icon--play,
+.media-button--play .media-icon--pause,
+.media-button--mute .media-icon--volume-off,
+.media-button--mute .media-icon--volume-low,
+.media-button--mute .media-icon--volume-high,
+.media-button--fullscreen .media-icon--fullscreen-enter,
+.media-button--fullscreen .media-icon--fullscreen-exit,
+.media-button--pip .media-icon--pip-enter,
+.media-button--pip .media-icon--pip-exit,
+.media-button--cast .media-icon--cast-enter,
+.media-button--cast .media-icon--cast-exit,
+.media-button--airplay .media-icon--airplay-enter,
+.media-button--airplay .media-icon--airplay-exit,
+.media-button--captions .media-icon--captions-off,
+.media-button--captions .media-icon--captions-on {
+  display: none;
+  opacity: 0;
+}
+
+/* --- Active icon per state --- */
+
+/* Play: ended → restart */
+.media-button--play[data-ended] .media-icon--restart,
+/* Play: paused or not yet started (not ended) → play */
+.media-button--play:not([data-ended])[data-paused] .media-icon--play,
+.media-button--play:not([data-ended]):not([data-started]) .media-icon--play,
+/* Play: started and not paused/ended → pause */
+.media-button--play[data-started]:not([data-paused]):not([data-ended]) .media-icon--pause,
+/* Mute: muted → volume off */
+.media-button--mute[data-muted] .media-icon--volume-off,
+/* Mute: volume low (not muted) → volume low */
+.media-button--mute:not([data-muted])[data-volume-level="low"] .media-icon--volume-low,
+/* Mute: volume high (not muted, not low) → volume high */
+.media-button--mute:not([data-muted]):not([data-volume-level="low"]) .media-icon--volume-high,
+/* Fullscreen: not fullscreen → enter */
+.media-button--fullscreen:not([data-fullscreen]) .media-icon--fullscreen-enter,
+/* Fullscreen: fullscreen → exit */
+.media-button--fullscreen[data-fullscreen] .media-icon--fullscreen-exit,
+/* Picture-in-Picture: not active → enter */
+.media-button--pip:not([data-pip]) .media-icon--pip-enter,
+/* Picture-in-Picture: active → exit */
+.media-button--pip[data-pip] .media-icon--pip-exit,
+/* Cast: not connected → enter */
+.media-button--cast:not([data-cast-state="connected"]) .media-icon--cast-enter,
+/* Cast: connected → exit */
+.media-button--cast[data-cast-state="connected"] .media-icon--cast-exit,
+/* AirPlay: not connected → enter */
+.media-button--airplay:not([data-airplay-state="connected"]) .media-icon--airplay-enter,
+/* AirPlay: connected → exit */
+.media-button--airplay[data-airplay-state="connected"] .media-icon--airplay-exit,
+/* Captions: not active → captions off */
+.media-button--captions:not([data-active]) .media-icon--captions-off,
+/* Captions: active → captions on */
+.media-button--captions[data-active] .media-icon--captions-on {
+  display: block;
+  opacity: 1;
+}
+
+/* --- Pause keyframe animations on inactive icons --- */
+
+/* The airplay-exit SVG defines its keyframes against CSS variables (mirroring
+   the spinner pattern). When the AirPlay session isn't active the SVG is
+   still in the DOM — just `display: none` — so its animations would keep
+   running. Set the variables to `none` to short-circuit the keyframes. */
+.media-button--airplay:not([data-airplay-state="connected"]) {
+  --media-icon--airplay__fill-animation: none;
+  --media-icon--airplay__triangle-animation: none;
+}
+
+/* -------------------------------------------------------------------------- */
+/* Global @keyframes for all video skins (CSS & Tailwind)                     */
+/* -------------------------------------------------------------------------- */
+
+@keyframes media-shake {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  20% {
+    translate: -6px 0;
+  }
+  40% {
+    translate: 4px 0;
+  }
+  60% {
+    translate: -2px 0;
+  }
+  80% {
+    translate: 1px 0;
+  }
+}
+
+/* -------------------------------------------------------------------------- */
+/* Global @properties for all video skins (CSS & Tailwind)                    */
+/* -------------------------------------------------------------------------- */
+
+@property --media-progress-fill {
+  syntax: "<percentage>";
+  inherits: true;
+  initial-value: 0%;
+}
+
+
+/* ==========================================================================
+   Root
+   ========================================================================== */
+
+.media-minimal-skin--video {
+  --media-border-color: oklch(0 0 0 / 0.15);
+  --media-video-border-radius: var(--media-border-radius, 0.75rem);
+
+  --media-controls-background-color: transparent;
+  --media-controls-transition-duration: 100ms;
+  --media-controls-transition-timing-function: ease-out;
+
+  --media-error-dialog-transition-duration: 150ms;
+  --media-error-dialog-transition-delay: 100ms;
+  --media-error-dialog-transition-timing-function: ease-out;
+
+  --media-popup-transition-duration: 100ms;
+  --media-popup-transition-timing-function: ease-out;
+
+  --media-popover-backdrop-filter: blur(16px) saturate(1.5);
+  --media-popover-background-color: oklch(0 0 0 / 0.5);
+  --media-popover-border-color: oklch(1 0 0 / 0.1);
+
+  --media-tooltip-backdrop-filter: var(--media-popover-backdrop-filter);
+  --media-tooltip-background-color: var(--media-popover-background-color);
+  --media-tooltip-border-color: var(--media-popover-border-color);
+
+  --media-tooltip-text-color: currentColor;
+
+  overflow: clip;
+  background: oklch(0 0 0);
+
+  @media (prefers-reduced-motion: reduce) {
+    --media-error-dialog-transition-duration: 50ms;
+    --media-error-dialog-transition-delay: 0ms;
+    --media-popup-transition-duration: 0ms;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    --media-border-color: oklch(1 0 0 / 0.15);
+  }
+
+  @media (prefers-reduced-transparency: reduce) or (prefers-contrast: more) {
+    --media-controls-background-color: oklch(0 0 0);
+    --media-tooltip-background-color: oklch(0 0 0);
+  }
+
+  &:has(.media-controls:not([data-visible])) {
+    /* Slight delay to hide controls on non-touch devices after interaction */
+    @media (pointer: fine) {
+      --media-controls-transition-duration: 300ms;
+    }
+    @media (pointer: coarse) {
+      --media-controls-transition-duration: 150ms;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      --media-controls-transition-duration: 50ms;
+    }
+  }
+
+  /* Inner border ring */
+  &::after {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    pointer-events: none;
+    content: "";
+    border-radius: inherit;
+    box-shadow: inset 0 0 0 1px var(--media-border-color);
+  }
+
+  &:fullscreen {
+    --media-border-radius: 0;
+
+    &::after {
+      display: none;
+    }
+
+    @media (width >= 1280px) {
+      --scale: 1.25;
+    }
+    @media (width >= 1536px) {
+      --scale: 1.5;
+    }
+    @media (width >= 1920px) {
+      --scale: 1.75;
+    }
+  }
+}
+
+/* ==========================================================================
+   Error Dialog
+   ========================================================================== */
+
+.media-minimal-skin--video .media-error {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  outline: none;
+}
+
+.media-minimal-skin--video .media-error__dialog {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--spacing) * 3);
+  width: 100%;
+  max-width: calc(var(--spacing) * 64);
+  padding: calc(var(--spacing) * 4);
+  color: oklch(1 0 0);
+  text-shadow: 0 1px 0 oklch(0 0 0 / 0.5);
+  pointer-events: auto;
+  transition-delay: var(--media-error-dialog-transition-delay);
+  transition-timing-function: var(--media-error-dialog-transition-timing-function);
+  transition-duration: var(--media-error-dialog-transition-duration);
+  transition-property: opacity, scale;
+}
+
+.media-minimal-skin--video .media-error__content {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--spacing) * 2);
+  padding: calc(var(--spacing) * 1.5) 0;
+}
+
+.media-minimal-skin--video .media-error__title {
+  font-size: var(--font-size-medium);
+}
+
+.media-minimal-skin--video .media-error[data-starting-style] .media-error__dialog,
+.media-minimal-skin--video .media-error[data-ending-style] .media-error__dialog {
+  opacity: 0;
+  scale: 0.5;
+}
+.media-minimal-skin--video .media-error[data-ending-style] .media-error__dialog {
+  transition-delay: 0ms;
+}
+
+/* ==========================================================================
+  Controls (hide/show behavior)
+  ========================================================================== */
+
+.media-minimal-skin--video .media-controls {
+  --base-side-offset: 7;
+  --base-boundary-offset: 1;
+  --inset-factor: 1;
+  --inset: calc(var(--spacing) * var(--inset-factor));
+
+  position: absolute;
+  inset-inline: var(--inset);
+  bottom: var(--inset);
+  z-index: 10;
+  flex-wrap: wrap;
+  column-gap: calc(var(--spacing) * 2);
+  color: oklch(1 0 0);
+  border-radius: calc(var(--spacing) * 3);
+  transition-timing-function: var(--media-controls-transition-timing-function);
+  /* Speed up the entry transition */
+  transition-duration: calc(var(--media-controls-transition-duration) / 2);
+
+  @media (pointer: fine) {
+    transition-property: translate, filter, opacity;
+    will-change: translate, filter, opacity;
+  }
+
+  @media (pointer: coarse) {
+    transition-property: translate, opacity;
+    will-change: translate, opacity;
+  }
+
+  &:not([data-visible]) {
+    pointer-events: none;
+    opacity: 0;
+    transition-duration: var(--media-controls-transition-duration);
+
+    @media (pointer: fine) and (prefers-reduced-motion: no-preference) {
+      filter: blur(8px);
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+      translate: 0 100%;
+    }
+  }
+
+  & .media-time-controls {
+    --slider-height: calc(var(--spacing) * 5);
+
+    flex: 0 0 100%;
+    order: -1;
+    padding-inline: calc(var(--spacing) * 1.5);
+  }
+
+  & .media-button-group:first-child {
+    flex: 1;
+    text-align: left;
+  }
+
+  & .media-button-group:last-child {
+    flex: 1;
+    justify-content: end;
+  }
+
+  @container media-root (width > 42rem) {
+    --inset-factor: 2;
+    --base-side-offset: 2;
+
+    flex-wrap: nowrap;
+
+    & .media-time-controls {
+      --slider-height: calc(var(--spacing) * 8);
+
+      flex: 1;
+      order: unset;
+    }
+
+    & .media-button-group:first-child,
+    & .media-button-group:last-child {
+      flex: 0 0 auto;
+    }
+
+    & .media-time-controls {
+      mask-position: 100% 0;
+      mask-size: 200% 100%;
+      transition: mask-position 50ms ease-out;
+    }
+
+    &:has(.media-button--mute[aria-expanded="true"]) .media-time-controls {
+      mask-image: linear-gradient(to right, transparent 10%, #000 25%, #000 100%);
+    }
+
+    &:has(.media-button--mute[aria-expanded="true"]) .media-time-controls {
+      mask-position: 0 0;
+    }
+  }
+}
+
+.media-minimal-skin--video .media-error[data-open] ~ .media-controls {
+  display: none;
+}
+
+/* Hide cursor when controls are hidden */
+.media-minimal-skin--video:has(.media-controls:not([data-visible])) {
+  cursor: none;
+}
+
+/* ==========================================================================
+   Sliders
+   ========================================================================== */
+
+.media-minimal-skin--video .media-slider__track {
+  box-shadow: 0 0 0 1px oklch(0 0 0 / 0.05);
+}
+
+/* ==========================================================================
+   Popups & Animations
+   ========================================================================== */
+
+.media-minimal-skin--video .media-popover--volume {
+  padding: 0;
+  background: transparent;
+}
+
+/* ==========================================================================
+   Slider preview
+   ========================================================================== */
+
+.media-minimal-skin--video .media-slider__thumbnail {
+  --max-width: calc(var(--spacing) * 44);
+  --max-height: calc(var(--spacing) * 32);
+  --padding: calc(var(--spacing) * -2);
+  /**
+    Inset is the difference between the container width and the slider (100%) width.
+    We only add to the end as we render the time there.
+  */
+  --thumbnail-inset: calc(100cqi - 100%);
+
+  position: absolute;
+  bottom: 100%;
+  left: clamp(
+    calc(var(--max-width) / 2 + var(--padding)),
+    var(--media-slider-pointer),
+    calc(100% - var(--max-width) / 2 - var(--padding) + var(--thumbnail-inset))
+  );
+  opacity: 0;
+  filter: blur(8px);
+  transform-origin: bottom;
+  scale: 0.8;
+  translate: -50%;
+  transition-timing-function: ease-out;
+  transition-duration: 150ms;
+  transition-property: scale, opacity, filter;
+
+  @container media-root (width > 42rem) {
+    left: var(--media-slider-pointer);
+  }
+
+  & .media-thumbnail__image-wrapper {
+    position: relative;
+
+    &::after {
+      position: absolute;
+      inset: 0;
+      content: "";
+      border-radius: inherit;
+      box-shadow:
+        0 0 0 1px oklch(0 0 0 / 0.05),
+        0 1px 3px 0 oklch(0 0 0 / 0.2),
+        0 1px 2px -1px oklch(0 0 0 / 0.2);
+    }
+  }
+
+  & .media-thumbnail__image {
+    max-width: var(--max-width);
+    max-height: var(--max-height);
+  }
+}
+.media-minimal-skin--video .media-slider[data-pointing] .media-slider__thumbnail:has([role="img"]:not([data-hidden])) {
+  opacity: 1;
+  filter: blur(0);
+  scale: 1;
+}
+.media-minimal-skin--video
+  .media-slider__thumbnail:has([role="img"]:not([data-hidden]))
+  + .media-slider__preview
+  .media-slider__value {
+  display: none;
+}
+

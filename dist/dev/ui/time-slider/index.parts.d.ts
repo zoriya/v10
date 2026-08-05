@@ -1,0 +1,14 @@
+import { SliderBuffer, SliderBufferProps } from "../slider/slider-buffer.js";
+import { SliderFill, SliderFillProps } from "../slider/slider-fill.js";
+import { SliderPreview, SliderPreviewProps } from "../slider/slider-preview.js";
+import { SliderThumb, SliderThumbProps } from "../slider/slider-thumb.js";
+import { SliderTrack, SliderTrackProps } from "../slider/slider-track.js";
+import { SliderValue, SliderValueProps } from "../slider/slider-value.js";
+import "../slider/index.parts.js";
+import { TimeSliderRoot, TimeSliderRootProps } from "./time-slider-root.js";
+declare namespace index_parts_d_exports {
+  export { SliderBuffer as Buffer, SliderBufferProps as BufferProps, SliderFill as Fill, SliderFillProps as FillProps, SliderPreview as Preview, SliderPreviewProps as PreviewProps, TimeSliderRoot as Root, TimeSliderRootProps as RootProps, SliderThumb as Thumb, SliderThumbProps as ThumbProps, SliderTrack as Track, SliderTrackProps as TrackProps, SliderValue as Value, SliderValueProps as ValueProps };
+}
+//#endregion
+export { SliderBuffer as Buffer, type SliderBufferProps as BufferProps, SliderFill as Fill, type SliderFillProps as FillProps, SliderPreview as Preview, type SliderPreviewProps as PreviewProps, TimeSliderRoot as Root, type TimeSliderRootProps as RootProps, SliderThumb as Thumb, type SliderThumbProps as ThumbProps, SliderTrack as Track, type SliderTrackProps as TrackProps, SliderValue as Value, type SliderValueProps as ValueProps, index_parts_d_exports };
+//# sourceMappingURL=index.parts.d.ts.map

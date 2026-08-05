@@ -1,0 +1,13 @@
+import { UIComponentProps } from "../../utils/types.js";
+import { TooltipState } from "@videojs/core";
+//#region src/ui/tooltip/tooltip-trigger.d.ts
+interface TooltipTriggerProps extends UIComponentProps<'button', TooltipState> {}
+/** Element that triggers the tooltip on hover and focus. Renders a `<button>` element. */
+declare const TooltipTrigger: import("react").ForwardRefExoticComponent<Omit<TooltipTriggerProps, "ref"> & import("react").RefAttributes<HTMLButtonElement>>;
+declare namespace TooltipTrigger {
+  type Props = TooltipTriggerProps;
+  type State = TooltipState;
+}
+//#endregion
+export { TooltipTrigger, TooltipTriggerProps };
+//# sourceMappingURL=tooltip-trigger.d.ts.map

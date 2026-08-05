@@ -1,0 +1,13 @@
+import { ReactNode } from "react";
+import { TooltipGroupProps } from "@videojs/core";
+//#region src/ui/tooltip/tooltip-provider.d.ts
+interface TooltipProviderProps extends TooltipGroupProps {
+  children?: ReactNode;
+}
+declare function TooltipProvider({ delay, closeDelay, timeout, children }: TooltipProviderProps): ReactNode;
+declare namespace TooltipProvider {
+  type Props = TooltipProviderProps;
+}
+//#endregion
+export { TooltipProvider, TooltipProviderProps };
+//# sourceMappingURL=tooltip-provider.d.ts.map
